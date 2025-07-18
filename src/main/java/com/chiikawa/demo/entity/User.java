@@ -1,4 +1,4 @@
-package com.chiikawa.demo.enity;
+package com.chiikawa.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

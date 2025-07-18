@@ -1,6 +1,6 @@
 package com.chiikawa.demo.repository;
 
-import com.chiikawa.demo.enity.Product;
+import com.chiikawa.demo.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,6 +11,15 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    @Query("SELECT p FROM Product p WHERE :name IS NULL or LOWER(p.productName) LIKE %:name%")
-    List <Product> findProductWithFilters(@Param("name") String name);
+    @Query("SELECT p FROM Product p WHERE " +
+            "(:name IS NULL OR LOWER(p.productName) LIKE %:name%) AND" +
+            "(:minPrice IS NULL OR p.price >= :minPrice) AND" +
+            "(:maxPrice IS NULL OR p.price <= :maxPrice)"
+    )
+
+    List <Product> findProductWithFilters(
+            @Param("name") String name,
+            @Param("minPrice") Double minPrice,
+            @Param("maxPrice") Double maxPrice
+    );
 }

@@ -1,6 +1,6 @@
 package com.chiikawa.demo.model;
 
-import com.chiikawa.demo.enity.User;
+import com.chiikawa.demo.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 

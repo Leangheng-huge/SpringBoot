@@ -1,6 +1,6 @@
 package com.chiikawa.demo.service;
 
-import com.chiikawa.demo.enity.Product;
+import com.chiikawa.demo.entity.Product;
 import com.chiikawa.demo.model.BaseResponseModel;
 import com.chiikawa.demo.model_product.BaseResponseModelOfProduct;
 import com.chiikawa.demo.model_product.ProductModel;
@@ -83,11 +83,11 @@ public class ProductService {
                 .body(new BaseResponseModel("success", "Product deleted"));
     }
 
-    public ResponseEntity<BaseResponseModelOfProduct> searchProduct(String name){
+    public ResponseEntity<BaseResponseModelOfProduct> searchProduct(String name, Double minPrice, Double maxPrice){
         String formattedName = name != null?
                 name.toLowerCase()
                 :null;
-        List <Product> product = productRepository.findProductWithFilters(formattedName);
+        List <Product> product = productRepository.findProductWithFilters(formattedName, minPrice , maxPrice);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new BaseResponseModelOfProduct("success", "Products retrieved", product));

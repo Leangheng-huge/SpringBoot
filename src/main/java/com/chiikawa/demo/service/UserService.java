@@ -1,6 +1,6 @@
 package com.chiikawa.demo.service;
 
-import com.chiikawa.demo.enity.User;
+import com.chiikawa.demo.entity.User;
 import com.chiikawa.demo.model.BaseResponseModel;
 import com.chiikawa.demo.model.UserModel;
 import com.chiikawa.demo.model.UserResponseModel;
