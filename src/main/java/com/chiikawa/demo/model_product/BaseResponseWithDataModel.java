@@ -6,10 +6,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BaseResponseModelOfProduct extends BaseResponseModel {
+public class BaseResponseWithDataModel extends BaseResponseModel {
     private Object data;
 
-    public BaseResponseModelOfProduct(String status, String message, Object data) {
+    public BaseResponseWithDataModel(String status, String message, Object data) {
         super(status, message);
         this.data = data;
     }

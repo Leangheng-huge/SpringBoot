@@ -2,7 +2,7 @@ package com.chiikawa.demo.service;
 
 import com.chiikawa.demo.entity.Product;
 import com.chiikawa.demo.model.BaseResponseModel;
-import com.chiikawa.demo.model_product.BaseResponseModelOfProduct;
+import com.chiikawa.demo.model_product.BaseResponseWithDataModel;
 import com.chiikawa.demo.model_product.ProductModel;
 import com.chiikawa.demo.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,21 +19,21 @@ import java.util.Optional;
 public class ProductService {
     @Autowired
     private ProductRepository productRepository;
-    public ResponseEntity<BaseResponseModelOfProduct> listProduct(){
+    public ResponseEntity<BaseResponseWithDataModel> listProduct(){
         List<Product> products = productRepository.findAll();
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new BaseResponseModelOfProduct("success", "Products retrieved", products));
+                .body(new BaseResponseWithDataModel("success", "Products retrieved",products));
     }
 
-    public ResponseEntity<BaseResponseModelOfProduct> getProduct(@PathVariable("id") Long id){
+    public ResponseEntity<BaseResponseWithDataModel> getProduct(@PathVariable("id") Long id){
         Optional<Product> product = productRepository.findById(id);
         if (product.isEmpty()){
             return ResponseEntity.status(404)
-                    .body(new BaseResponseModelOfProduct("Fail", "Product not found with id: " + id,null));
+                    .body(new BaseResponseWithDataModel("Fail", "Product not found with id: " + id,null));
         }
         return ResponseEntity.status(200)
-                .body(new BaseResponseModelOfProduct("success", "Product retrieved", product.get()));
+                .body(new BaseResponseWithDataModel("success", "Product retrieved",product.get()));
     }
 
     public ResponseEntity<BaseResponseModel> createProduct(ProductModel product){
@@ -83,13 +83,13 @@ public class ProductService {
                 .body(new BaseResponseModel("success", "Product deleted"));
     }
 
-    public ResponseEntity<BaseResponseModelOfProduct> searchProduct(String name, Double minPrice, Double maxPrice){
+    public ResponseEntity<BaseResponseWithDataModel> searchProduct(String name, Double minPrice, Double maxPrice){
         String formattedName = name != null?
                 name.toLowerCase()
                 :null;
         List <Product> product = productRepository.findProductWithFilters(formattedName, minPrice , maxPrice);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new BaseResponseModelOfProduct("success", "Products retrieved", product));
+                .body(new BaseResponseWithDataModel("success", "Products retrieved",product));
     }
 }

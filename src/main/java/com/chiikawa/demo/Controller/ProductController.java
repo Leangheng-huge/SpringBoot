@@ -1,7 +1,7 @@
 package com.chiikawa.demo.Controller;
 
 import com.chiikawa.demo.model.BaseResponseModel;
-import com.chiikawa.demo.model_product.BaseResponseModelOfProduct;
+import com.chiikawa.demo.model_product.BaseResponseWithDataModel;
 import com.chiikawa.demo.model_product.ProductModel;
 import com.chiikawa.demo.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +16,17 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public ResponseEntity<BaseResponseModelOfProduct> listProduct() {
+    public ResponseEntity<BaseResponseWithDataModel> listProduct() {
         return productService.listProduct();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BaseResponseModelOfProduct> getProduct(@PathVariable("id") Long id) {
+    public ResponseEntity<BaseResponseWithDataModel> getProduct(@PathVariable("id") Long id) {
         return productService.getProduct(id);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<BaseResponseModelOfProduct> searchProductByFilters(@RequestParam(value = "name")
+    public ResponseEntity<BaseResponseWithDataModel> searchProductByFilters(@RequestParam(value = "name")
                                                                                  String name, Double minPrice, Double maxPrice) {
 
         return productService.searchProduct(name, minPrice , maxPrice);

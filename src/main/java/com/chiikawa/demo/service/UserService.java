@@ -4,7 +4,7 @@ import com.chiikawa.demo.entity.User;
 import com.chiikawa.demo.model.BaseResponseModel;
 import com.chiikawa.demo.model.UserModel;
 import com.chiikawa.demo.model.UserResponseModel;
-import com.chiikawa.demo.model_product.BaseResponseModelOfProduct;
+import com.chiikawa.demo.model_product.BaseResponseWithDataModel;
 import com.chiikawa.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,14 +27,14 @@ public class UserService {
                 .body(new UserResponseModel("success", "Users retrieved", userData));
     }
 
-    public ResponseEntity<BaseResponseModelOfProduct> getUser(Long id){
+    public ResponseEntity<BaseResponseWithDataModel> getUser(Long id){
         Optional<User> user = userRepository.findById(id);
         if (user.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new BaseResponseModelOfProduct("Fail", "User not found with id: " + id,null));
+                    .body(new BaseResponseWithDataModel("Fail", "User not found with id: " + id,null));
         }
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new BaseResponseModelOfProduct("success", "User retrieved", user.get()));
+                .body(new BaseResponseWithDataModel("success", "User retrieved",user.get()));
     }
 
     public ResponseEntity<BaseResponseModel> createUser(List<UserModel> users, UserModel payload){
