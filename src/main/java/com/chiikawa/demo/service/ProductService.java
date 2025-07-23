@@ -3,7 +3,7 @@ package com.chiikawa.demo.service;
 import com.chiikawa.demo.entity.Product;
 import com.chiikawa.demo.model.BaseResponseModel;
 import com.chiikawa.demo.model_product.BaseResponseWithDataModel;
-import com.chiikawa.demo.model_product.ProductModel;
+import com.chiikawa.demo.DTO.ProductDto;
 import com.chiikawa.demo.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,7 +36,7 @@ public class ProductService {
                 .body(new BaseResponseWithDataModel("success", "Product retrieved",product.get()));
     }
 
-    public ResponseEntity<BaseResponseModel> createProduct(ProductModel product){
+    public ResponseEntity<BaseResponseModel> createProduct(ProductDto product){
         Product productEntity = new Product();
 
         productEntity.setPrice(product.getPrice());
@@ -51,7 +51,7 @@ public class ProductService {
                 .body(new BaseResponseModel("success", "Product created"));
     }
 
-    public ResponseEntity<BaseResponseModel> updateProduct(Long productId, ProductModel product){
+    public ResponseEntity<BaseResponseModel> updateProduct(Long productId, ProductDto product){
         Optional<Product> existingProduct = productRepository.findById(productId);
         if (existingProduct.isEmpty()){
             // if user not found response with 404

@@ -2,7 +2,7 @@ package com.chiikawa.demo.Controller;
 
 import com.chiikawa.demo.model.BaseResponseModel;
 import com.chiikawa.demo.model_product.BaseResponseWithDataModel;
-import com.chiikawa.demo.model_product.ProductModel;
+import com.chiikawa.demo.DTO.ProductDto;
 import com.chiikawa.demo.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,13 +33,13 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<BaseResponseModel> createProduct(@RequestBody ProductModel payload) {
+    public ResponseEntity<BaseResponseModel> createProduct(@RequestBody ProductDto payload) {
         return productService.createProduct(payload);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<BaseResponseModel> updateProduct(@PathVariable("id") Long id,
-                                                                    @RequestBody ProductModel payload) {
+                                                                    @RequestBody ProductDto payload) {
         return productService.updateProduct(id, payload);
     }
 
