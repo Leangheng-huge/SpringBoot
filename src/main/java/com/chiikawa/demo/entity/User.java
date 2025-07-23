@@ -14,10 +14,19 @@ public class User {
     private Long id;
     private String email;
     private String name;
+    private String password;
     private Integer age;
     private String address;
     private String role;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @PreUpdate
+    public void preUpdate(){
+        this.updatedAt = LocalDateTime.now();
+    }
 }

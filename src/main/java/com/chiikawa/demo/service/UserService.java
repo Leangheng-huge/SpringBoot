@@ -1,8 +1,10 @@
 package com.chiikawa.demo.service;
 
+import com.chiikawa.demo.DTO.UserResponseDto;
+import com.chiikawa.demo.Mapper.UserMapper;
 import com.chiikawa.demo.entity.User;
 import com.chiikawa.demo.model.BaseResponseModel;
-import com.chiikawa.demo.model.UserModel;
+import com.chiikawa.demo.DTO.UserDto;
 import com.chiikawa.demo.model.UserResponseModel;
 import com.chiikawa.demo.model_product.BaseResponseWithDataModel;
 import com.chiikawa.demo.repository.UserRepository;
@@ -20,74 +22,74 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public ResponseEntity<UserResponseModel> getUser(){
+    @Autowired
+    private UserMapper mapper;
 
-        List<User> userData = userRepository.findAll();
+    public ResponseEntity<BaseResponseWithDataModel> listUsers() {
+        List<User> users = userRepository.findAll();
+
+        List<UserResponseDto> dtos = mapper.toDtoList(users);
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new UserResponseModel("success", "Users retrieved", userData));
+                .body(new BaseResponseWithDataModel("success","successfully retrieve users",dtos));
     }
 
-    public ResponseEntity<BaseResponseWithDataModel> getUser(Long id){
-        Optional<User> user = userRepository.findById(id);
-        if (user.isEmpty()){
+    public ResponseEntity<BaseResponseWithDataModel> getUser(Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+
+        if(user.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new BaseResponseWithDataModel("Fail", "User not found with id: " + id,null));
+                    .body(new BaseResponseWithDataModel("fail","user not found with id : " + userId,null));
         }
+
+        UserResponseDto dto = mapper.toDto(user.get());
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new BaseResponseWithDataModel("success", "User retrieved",user.get()));
+                .body(new BaseResponseWithDataModel("success","user found",dto));
     }
 
-    public ResponseEntity<BaseResponseModel> createUser(List<UserModel> users, UserModel payload){
-        User user = new User();
-        user.setName(payload.getName());
-        user.setAge(payload.getAge());
-        user.setAddress(payload.getAddress());
-        user.setEmail(payload.getEmail());
-        user.setCreatedAt(LocalDateTime.now());
-        user.setRole(payload.getRole());
+    public ResponseEntity<BaseResponseModel> createUser(UserDto payload) {
+        User user = mapper.toEntity(payload);
 
         userRepository.save(user);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new BaseResponseModel("success", "User created"));
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new BaseResponseModel("success","successfully created user"));
     }
 
-    public ResponseEntity<BaseResponseModel> updateUser(List<UserModel> users, UserModel payload, Long userId){
+    public ResponseEntity<BaseResponseModel> updateUser(UserDto payload, Long userId) {
+        Optional<User> existing = userRepository.findById(userId);
 
-        Optional<User> existingUser = userRepository.findById(userId);
-        if (existingUser.isEmpty()){
-            // if user not found response with 404
+        // if user not found, then response 404
+        if(existing.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new BaseResponseModel("Fail", "user not found with id: " + userId));
+                    .body(new BaseResponseModel("fail","user not found with id: " + userId));
         }
 
-        // user found, update it
-        User updatedUser = existingUser.get();
-
         // modify values
-        updatedUser.setName(payload.getName());
-        updatedUser.setAge(payload.getAge());
-        updatedUser.setEmail(payload.getEmail());
-        updatedUser.setAddress(payload.getAddress());
-        updatedUser.setRole(payload.getRole());
+        User updatedUser = existing.get();
+        mapper.updateEntityFromDto(updatedUser,payload);
+
         userRepository.save(updatedUser);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new BaseResponseModel("success", "User updated"));
+                .body(new BaseResponseModel("success","successfully updated user"));
     }
 
-    public ResponseEntity<BaseResponseModel> deleteUser(List<UserModel> users, Long userId){
-        Optional<User> existingUser = userRepository.findById(userId);
-        if (existingUser.isEmpty()){
-            // if user not found response with 404
+    public ResponseEntity<BaseResponseModel> deleteUser(Long userId) {
+        // if user not found, then response 404
+        if(!userRepository.existsById(userId)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new BaseResponseModel("Fail", "user not found with id: " + userId));
+                    .body(new BaseResponseModel("fail","user not found with id: " + userId));
         }
 
-        // user found, then delete it
+        // user found , then delete
         userRepository.deleteById(userId);
+
+        // 200 OK
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new BaseResponseModel("success", "User deleted"));
+                .body(new BaseResponseModel("success","successfully deleted user"));
     }
 
 }

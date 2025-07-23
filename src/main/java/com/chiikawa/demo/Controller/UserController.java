@@ -1,7 +1,7 @@
 package com.chiikawa.demo.Controller;
 
 import com.chiikawa.demo.model.BaseResponseModel;
-import com.chiikawa.demo.model.UserModel;
+import com.chiikawa.demo.DTO.UserDto;
 import com.chiikawa.demo.model.UserResponseModel;
 import com.chiikawa.demo.model_product.BaseResponseWithDataModel;
 import com.chiikawa.demo.service.UserService;
@@ -16,40 +16,36 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/users")
 public class UserController {
-@Autowired
-UserService userService;
-    private List<UserModel> users = new ArrayList<>(Arrays.asList(
-            new UserModel(1L, "John", 25, "USA","","")
-    ));
+    @Autowired
+    private UserService userService;
 
-    // used for retrieving records from the database
+    // used for retrieving records
     @GetMapping
-    public ResponseEntity<UserResponseModel> listUsers() {
-      return userService.getUser();
+    public ResponseEntity<BaseResponseWithDataModel> listUsers() {
+        return userService.listUsers();
     }
 
     @GetMapping("/{user_id}")
-    public ResponseEntity<BaseResponseWithDataModel> getUser(@PathVariable("user_id") Long userId){
+    public ResponseEntity<BaseResponseWithDataModel> getUser(@PathVariable("user_id") Long userId) {
         return userService.getUser(userId);
     }
 
-    // used for creating / inserting records into the database
+    // used for creating/inserting record
     // request body can be called request payload or shortcut "payload"
     @PostMapping
-    public ResponseEntity<BaseResponseModel> createUser(@RequestBody UserModel payload) {
-       return userService.createUser(users, payload);
+    public ResponseEntity<BaseResponseModel> createUser(@RequestBody UserDto payload) {
+        return userService.createUser(payload);
     }
 
+    //  endpoint -> /api/v1/users/923482348284
     @PutMapping("/{user_id}")
-    public ResponseEntity<BaseResponseModel> updateUser(@PathVariable("user_id") Long userId, @RequestBody UserModel payload) {
-
-       return userService.updateUser(users, payload, userId);
+    public ResponseEntity<BaseResponseModel> updateUser(@PathVariable("user_id") Long userId, @RequestBody UserDto payload) {
+        return userService.updateUser(payload,userId);
     }
 
     // Path variable
     @DeleteMapping("/{user_id}")
     public ResponseEntity<BaseResponseModel> deleteUser(@PathVariable("user_id") Long userId) {
-        // not found, every array starts from 0
-        return userService.deleteUser(users, userId);
+        return userService.deleteUser(userId);
     }
 }
