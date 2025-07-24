@@ -1,4 +1,4 @@
-package com.chiikawa.demo.DTO;
+package com.chiikawa.demo.DTO.User;
 
 import lombok.*;
 

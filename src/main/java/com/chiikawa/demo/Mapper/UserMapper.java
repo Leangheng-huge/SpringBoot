@@ -1,7 +1,7 @@
 package com.chiikawa.demo.Mapper;
 
-import com.chiikawa.demo.DTO.UserDto;
-import com.chiikawa.demo.DTO.UserResponseDto;
+import com.chiikawa.demo.DTO.User.UserDto;
+import com.chiikawa.demo.DTO.User.UserResponseDto;
 import com.chiikawa.demo.entity.User;
 import org.springframework.stereotype.Component;
 

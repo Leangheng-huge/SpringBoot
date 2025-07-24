@@ -1,17 +1,12 @@
 package com.chiikawa.demo.Controller;
 
 import com.chiikawa.demo.model.BaseResponseModel;
-import com.chiikawa.demo.DTO.UserDto;
-import com.chiikawa.demo.model.UserResponseModel;
+import com.chiikawa.demo.DTO.User.UserDto;
 import com.chiikawa.demo.model_product.BaseResponseWithDataModel;
 import com.chiikawa.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/users")

@@ -1,4 +1,4 @@
-package com.chiikawa.demo.DTO;
+package com.chiikawa.demo.DTO.User;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;

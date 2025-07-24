@@ -1,11 +1,10 @@
 package com.chiikawa.demo.service;
 
-import com.chiikawa.demo.DTO.UserResponseDto;
+import com.chiikawa.demo.DTO.User.UserResponseDto;
 import com.chiikawa.demo.Mapper.UserMapper;
 import com.chiikawa.demo.entity.User;
 import com.chiikawa.demo.model.BaseResponseModel;
-import com.chiikawa.demo.DTO.UserDto;
-import com.chiikawa.demo.model.UserResponseModel;
+import com.chiikawa.demo.DTO.User.UserDto;
 import com.chiikawa.demo.model_product.BaseResponseWithDataModel;
 import com.chiikawa.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 

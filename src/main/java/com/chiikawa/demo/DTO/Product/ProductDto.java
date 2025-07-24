@@ -1,4 +1,4 @@
-package com.chiikawa.demo.DTO;
+package com.chiikawa.demo.DTO.Product;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,6 +11,5 @@ public class ProductDto {
 
     private String name;
     private Double price;
-    private String password;
     private String description;
 }
