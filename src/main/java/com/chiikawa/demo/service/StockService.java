@@ -1,8 +1,8 @@
 package com.chiikawa.demo.service;
 
+import com.chiikawa.demo.DTO.Stock.StockDto;
 import com.chiikawa.demo.entity.Stock;
 import com.chiikawa.demo.model.BaseResponseModel;
-import com.chiikawa.demo.model.StockModel;
 import com.chiikawa.demo.model.UpdateStockModel;
 import com.chiikawa.demo.model_product.BaseResponseWithDataModel;
 import com.chiikawa.demo.repository.StockRepository;
@@ -31,12 +31,12 @@ public class StockService {
                 .body(new BaseResponseWithDataModel("success","successfully retrieved stocks",stocks));
     }
 
-    public ResponseEntity<BaseResponseModel> createStock(StockModel stock) {
+    public ResponseEntity<BaseResponseModel> createStock(StockDto stock) {
         Stock stockEntity = new Stock();
 
         stockEntity.setQuantity(stock.getQuantity());
         stockEntity.setProductId(stock.getProductID());
-        stockEntity.setCreatedAt(LocalDateTime.now());
+
 
         stockRepository.save(stockEntity);
 
@@ -74,7 +74,7 @@ public class StockService {
                     .body(new BaseResponseModel("fail","invalid operation type"));
         }
 
-        stock.setUpdatedAt(LocalDateTime.now());
+
         stockRepository.save(stock);
 
         return ResponseEntity.status(HttpStatus.OK)

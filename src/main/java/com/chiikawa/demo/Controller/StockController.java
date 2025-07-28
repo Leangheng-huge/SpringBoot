@@ -1,7 +1,7 @@
 package com.chiikawa.demo.Controller;
 
+import com.chiikawa.demo.DTO.Stock.StockDto;
 import com.chiikawa.demo.model.BaseResponseModel;
-import com.chiikawa.demo.model.StockModel;
 import com.chiikawa.demo.model.UpdateStockModel;
 import com.chiikawa.demo.model_product.BaseResponseWithDataModel;
 import com.chiikawa.demo.service.StockService;
@@ -21,7 +21,7 @@ public class StockController {
     }
 
     @PostMapping
-    public ResponseEntity<BaseResponseModel> createStock(@RequestBody StockModel payload){
+    public ResponseEntity<BaseResponseModel> createStock(@RequestBody StockDto payload){
         return stockService.createStock(payload);
     }
 
