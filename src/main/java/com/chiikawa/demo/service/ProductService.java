@@ -3,7 +3,7 @@ package com.chiikawa.demo.service;
 import com.chiikawa.demo.Mapper.ProductMapper;
 import com.chiikawa.demo.entity.Product;
 import com.chiikawa.demo.model.BaseResponseModel;
-import com.chiikawa.demo.model_product.BaseResponseWithDataModel;
+import com.chiikawa.demo.model.BaseResponseWithDataModel;
 import com.chiikawa.demo.DTO.Product.ProductDto;
 import com.chiikawa.demo.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;

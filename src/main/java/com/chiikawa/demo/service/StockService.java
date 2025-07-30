@@ -6,7 +6,7 @@ import com.chiikawa.demo.entity.Product;
 import com.chiikawa.demo.entity.Stock;
 import com.chiikawa.demo.model.BaseResponseModel;
 import com.chiikawa.demo.model.UpdateStockModel;
-import com.chiikawa.demo.model_product.BaseResponseWithDataModel;
+import com.chiikawa.demo.model.BaseResponseWithDataModel;
 import com.chiikawa.demo.repository.ProductRepository;
 import com.chiikawa.demo.repository.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,7 +3,7 @@ package com.chiikawa.demo.Controller;
 import com.chiikawa.demo.DTO.Stock.StockDto;
 import com.chiikawa.demo.model.BaseResponseModel;
 import com.chiikawa.demo.model.UpdateStockModel;
-import com.chiikawa.demo.model_product.BaseResponseWithDataModel;
+import com.chiikawa.demo.model.BaseResponseWithDataModel;
 import com.chiikawa.demo.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

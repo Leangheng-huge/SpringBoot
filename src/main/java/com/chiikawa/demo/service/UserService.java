@@ -5,7 +5,7 @@ import com.chiikawa.demo.Mapper.UserMapper;
 import com.chiikawa.demo.entity.User;
 import com.chiikawa.demo.model.BaseResponseModel;
 import com.chiikawa.demo.DTO.User.UserDto;
-import com.chiikawa.demo.model_product.BaseResponseWithDataModel;
+import com.chiikawa.demo.model.BaseResponseWithDataModel;
 import com.chiikawa.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

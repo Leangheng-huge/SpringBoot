@@ -1,6 +1,5 @@
-package com.chiikawa.demo.model_product;
+package com.chiikawa.demo.model;
 
-import com.chiikawa.demo.model.BaseResponseModel;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -2,7 +2,7 @@ package com.chiikawa.demo.Controller;
 
 import com.chiikawa.demo.model.BaseResponseModel;
 import com.chiikawa.demo.DTO.User.UserDto;
-import com.chiikawa.demo.model_product.BaseResponseWithDataModel;
+import com.chiikawa.demo.model.BaseResponseWithDataModel;
 import com.chiikawa.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
