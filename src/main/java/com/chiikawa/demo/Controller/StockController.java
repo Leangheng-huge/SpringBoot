@@ -15,6 +15,11 @@ public class StockController {
     @Autowired
     private StockService stockService;
 
+    @GetMapping("{id}")
+    public ResponseEntity<BaseResponseWithDataModel> getStock(@PathVariable("id") Long stockId) {
+        return stockService.getStock(stockId);
+    }
+
     @GetMapping
     public ResponseEntity<BaseResponseWithDataModel>listStocks(){
         return stockService.listStocks();

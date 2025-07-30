@@ -1,10 +1,13 @@
 package com.chiikawa.demo.service;
 
 import com.chiikawa.demo.DTO.Stock.StockDto;
+import com.chiikawa.demo.Mapper.StockMapper;
+import com.chiikawa.demo.entity.Product;
 import com.chiikawa.demo.entity.Stock;
 import com.chiikawa.demo.model.BaseResponseModel;
 import com.chiikawa.demo.model.UpdateStockModel;
 import com.chiikawa.demo.model_product.BaseResponseWithDataModel;
+import com.chiikawa.demo.repository.ProductRepository;
 import com.chiikawa.demo.repository.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +26,12 @@ public class StockService {
     @Autowired
     private StockRepository stockRepository;
 
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private StockMapper mapper;
+
     public ResponseEntity<BaseResponseWithDataModel> listStocks(){
         List<Stock> stocks = stockRepository.findAll();
 
@@ -31,12 +39,27 @@ public class StockService {
                 .body(new BaseResponseWithDataModel("success","successfully retrieved stocks",stocks));
     }
 
+    public ResponseEntity<BaseResponseWithDataModel> getStock(Long stockId) {
+        Optional<Stock> stock = stockRepository.findById(stockId);
+
+        if(stock.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new BaseResponseWithDataModel("fail","stock not found with id: " + stockId,null));
+        }
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new BaseResponseWithDataModel("success","stock found",stock.get()));
+    }
+
     public ResponseEntity<BaseResponseModel> createStock(StockDto stock) {
-        Stock stockEntity = new Stock();
+        Optional<Product> existingProduct = productRepository.findById(stock.getProductId());
+        // product not found
+        if(existingProduct.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new BaseResponseModel("fail","product not found: " + stock.getProductId()));
+        }
 
-        stockEntity.setQuantity(stock.getQuantity());
-        stockEntity.setProductId(stock.getProductID());
-
+        Stock stockEntity = mapper.toEntity(stock,existingProduct.get());
 
         stockRepository.save(stockEntity);
 

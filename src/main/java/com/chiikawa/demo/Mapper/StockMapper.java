@@ -3,6 +3,7 @@ package com.chiikawa.demo.Mapper;
 
 import com.chiikawa.demo.DTO.Stock.StockDto;
 import com.chiikawa.demo.DTO.Stock.StockResponseDto;
+import com.chiikawa.demo.entity.Product;
 import com.chiikawa.demo.entity.Stock;
 import org.springframework.stereotype.Component;
 
@@ -12,11 +13,11 @@ import java.util.stream.Collectors;
 
 @Component
 public class StockMapper {
-    public Stock toEntity(StockDto dto){
+    public Stock toEntity(StockDto dto, Product product){
         Stock entity = new Stock();
 
         entity.setQuantity(dto.getQuantity());
-        entity.setProductId(dto.getProductID());
+        entity.setProduct(product);
 
         return entity;
     }
@@ -25,7 +26,7 @@ public class StockMapper {
         StockResponseDto dto = new StockResponseDto();
 
         dto.setId(entity.getId());
-        dto.setProductId(entity.getProductId());
+        dto.setProductId(entity.getProduct().getId());
         dto.setQty(entity.getQuantity());
         dto.setCreatedAt(entity.getCreatedAt());
         dto.setUpdatedAt(entity.getUpdatedAt());
