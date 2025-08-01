@@ -1,5 +1,6 @@
 package com.chiikawa.demo.service;
 
+import com.chiikawa.demo.DTO.supplier.SupplierDto;
 import com.chiikawa.demo.Mapper.ProductMapper;
 import com.chiikawa.demo.entity.Product;
 import com.chiikawa.demo.model.BaseResponseModel;
@@ -42,18 +43,18 @@ public class ProductService {
     }
 
     public ResponseEntity<BaseResponseModel> createProduct(ProductDto product) {
-        Product productEntity = new Product();
+        // validate if product is already existed
+        if(productRepository.existsByProductName(product.getName())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(new BaseResponseModel("fail","product is already existed"));
+        }
 
-        productEntity.setPrice(product.getPrice());
-        productEntity.setProductName(product.getName());
-        productEntity.setDescription(product.getDescription());
-        productEntity.setCreatedAt(LocalDateTime.now());
-        productEntity.setUpdatedAt(LocalDateTime.now());
+        Product productEntity = mapper.toEntity(product);
 
         productRepository.save(productEntity);
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new BaseResponseModel("success", "Product created"));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new BaseResponseModel("success","successfully created product"));
     }
 
     public ResponseEntity<BaseResponseModel> updateProduct(Long productId, ProductDto product) {
