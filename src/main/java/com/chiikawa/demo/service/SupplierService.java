@@ -2,6 +2,8 @@ package com.chiikawa.demo.service;
 
 import com.chiikawa.demo.DTO.supplier.SupplierDto;
 import com.chiikawa.demo.DTO.supplier.UpdateSupplierDto;
+import com.chiikawa.demo.Exception.model.DuplicateResourceException;
+import com.chiikawa.demo.Exception.model.ResourceNotFoundException;
 import com.chiikawa.demo.Mapper.SupplierMapper;
 import com.chiikawa.demo.entity.Supplier;
 import com.chiikawa.demo.model.BaseResponseModel;
@@ -36,29 +38,23 @@ public class SupplierService {
     public ResponseEntity<BaseResponseModel> createSupplier(SupplierDto dto){
             // if duplicate supplier name, then reject
         if(supplierRepository.existsByName(dto.getName())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(new BaseResponseModel("fail","supplier not found with name: " + dto.getName()));
+            throw new DuplicateResourceException("supplier not found with name: " + dto.getName());
         }
 
-        Supplier supplier = mapper.toEntity(dto);
+        Supplier supplierEntity = mapper.toEntity(dto);
 
-        supplierRepository.save(supplier);
+        supplierRepository.save(supplierEntity);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new BaseResponseModel("success","successfully created supplier"));
     }
 
     public ResponseEntity<BaseResponseModel> updateSuppliers(Long supplierId, UpdateSupplierDto dto){
-        Optional<Supplier> existingSupplier = supplierRepository.findById(supplierId);
+        Supplier existingSupplier = supplierRepository.findById(supplierId)
+                .orElseThrow(() -> new ResourceNotFoundException("Supplier not found with id: " + supplierId));
 
-        if (existingSupplier.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new BaseResponseModel("Fail","Supplier not found with id: " + supplierId));
-        }
-
-        Supplier supplier = existingSupplier.get();
-        mapper.updateEntityFromDto(supplier,dto);
-        supplierRepository.save(supplier);
+        mapper.updateEntityFromDto(existingSupplier,dto);
+        supplierRepository.save(existingSupplier);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new BaseResponseModel("Success","Successfully updated."));
@@ -66,8 +62,7 @@ public class SupplierService {
 
     public ResponseEntity<BaseResponseModel> deleteSuppliers (Long supplierId){
         if (!supplierRepository.existsById(supplierId)){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new BaseResponseModel("Fail","Supplier nt found with id: " + supplierId));
+            throw new ResourceNotFoundException("Supplier nt found with id: " + supplierId);
         }
 
         supplierRepository.existsById(supplierId);

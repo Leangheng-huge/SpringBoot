@@ -3,10 +3,8 @@ package com.chiikawa.demo.Controller;
 import com.chiikawa.demo.model.BaseResponseModel;
 import com.chiikawa.demo.model.BaseResponseWithDataModel;
 import com.chiikawa.demo.DTO.Product.ProductDto;
-import com.chiikawa.demo.model.Exception.ResourceNotFoundException;
 import com.chiikawa.demo.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,11 +46,5 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public ResponseEntity<BaseResponseModel> deleteProduct(@PathVariable("id") Long id) {
         return productService.deleteProduct(id);
-    }
-
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<BaseResponseModel> handleResourceNotFoundException(ResourceNotFoundException ex){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new BaseResponseModel("fail.", ex.getMessage()));
     }
 }

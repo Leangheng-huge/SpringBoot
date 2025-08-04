@@ -1,11 +1,12 @@
 package com.chiikawa.demo.service;
 
-import com.chiikawa.demo.DTO.supplier.SupplierDto;
 import com.chiikawa.demo.Mapper.ProductMapper;
 import com.chiikawa.demo.entity.Product;
 import com.chiikawa.demo.model.BaseResponseModel;
 import com.chiikawa.demo.model.BaseResponseWithDataModel;
 import com.chiikawa.demo.DTO.Product.ProductDto;
+import com.chiikawa.demo.Exception.model.DuplicateResourceException;
+import com.chiikawa.demo.Exception.model.ResourceNotFoundException;
 import com.chiikawa.demo.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -32,21 +32,18 @@ public class ProductService {
                 .body(new BaseResponseWithDataModel("success", "Products retrieved", mapper.toDtoList(products)));
     }
 
-    public ResponseEntity<BaseResponseWithDataModel> getProduct(@PathVariable("id") Long id) {
-        Optional<Product> product = productRepository.findById(id);
-        if (product.isEmpty()) {
-            return ResponseEntity.status(404)
-                    .body(new BaseResponseWithDataModel("Fail", "Product not found with id: " + id, null));
-        }
-        return ResponseEntity.status(200)
-                .body(new BaseResponseWithDataModel("success", "Product retrieved", product.get()));
+    public ResponseEntity<BaseResponseWithDataModel> getProduct(@PathVariable("id") Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() ->new ResourceNotFoundException("Product not found with id: " + productId));
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new BaseResponseWithDataModel("success", "Product retrieved", product));
     }
 
     public ResponseEntity<BaseResponseModel> createProduct(ProductDto product) {
         // validate if product is already existed
         if(productRepository.existsByProductName(product.getName())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(new BaseResponseModel("fail","product is already existed"));
+            throw new DuplicateResourceException("product is already existed");
         }
 
         Product productEntity = mapper.toEntity(product);
@@ -58,21 +55,16 @@ public class ProductService {
     }
 
     public ResponseEntity<BaseResponseModel> updateProduct(Long productId, ProductDto product) {
-        Optional<Product> existingProduct = productRepository.findById(productId);
-        if (existingProduct.isEmpty()) {
-            // if user not found response with 404
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new BaseResponseModel("Fail", "Product not found with id: " + productId));
-        }
+        Product existingProduct = productRepository.findById(productId)
+                .orElseThrow(() ->new ResourceNotFoundException("Product not found with id: " + productId));
         // user found, then update it
-        Product updatedProduct = existingProduct.get();
 
-        updatedProduct.setPrice(product.getPrice());
-        updatedProduct.setProductName(product.getName());
-        updatedProduct.setDescription(product.getDescription());
-        updatedProduct.setUpdatedAt(LocalDateTime.now());
+        existingProduct.setPrice(product.getPrice());
+        existingProduct.setProductName(product.getName());
+        existingProduct.setDescription(product.getDescription());
+        existingProduct.setUpdatedAt(LocalDateTime.now());
 
-        productRepository.save(updatedProduct);
+        productRepository.save(existingProduct);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new BaseResponseModel("success", "Product updated"));
@@ -80,8 +72,7 @@ public class ProductService {
 
     public ResponseEntity<BaseResponseModel> deleteProduct(Long productId) {
         if (!productRepository.existsById(productId)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new BaseResponseModel("Fail", "Product not found with id: " + productId));
+            throw new ResourceNotFoundException("Product not found with id: " + productId);
         }
         productRepository.deleteById(productId);
 

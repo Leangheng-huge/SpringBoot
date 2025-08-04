@@ -1,6 +1,7 @@
 package com.chiikawa.demo.service;
 
 import com.chiikawa.demo.DTO.Stock.StockDto;
+import com.chiikawa.demo.Exception.model.ResourceNotFoundException;
 import com.chiikawa.demo.Mapper.StockMapper;
 import com.chiikawa.demo.entity.Product;
 import com.chiikawa.demo.entity.Stock;
@@ -40,26 +41,18 @@ public class StockService {
     }
 
     public ResponseEntity<BaseResponseWithDataModel> getStock(Long stockId) {
-        Optional<Stock> stock = stockRepository.findById(stockId);
-
-        if(stock.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new BaseResponseWithDataModel("fail","stock not found with id: " + stockId,null));
-        }
+        Stock stock = stockRepository.findById(stockId)
+                .orElseThrow(()->new ResourceNotFoundException("stock not found with id: " + stockId));
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new BaseResponseWithDataModel("success","stock found",stock.get()));
+                .body(new BaseResponseWithDataModel("success","stock found",stock));
     }
 
     public ResponseEntity<BaseResponseModel> createStock(StockDto stock) {
-        Optional<Product> existingProduct = productRepository.findById(stock.getProductId());
-        // product not found
-        if(existingProduct.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new BaseResponseModel("fail","product not found: " + stock.getProductId()));
-        }
+        Product existingProduct = productRepository.findById(stock.getProductId())
+                .orElseThrow(() ->new ResourceNotFoundException("product not found: " + stock.getProductId()));
 
-        Stock stockEntity = mapper.toEntity(stock,existingProduct.get());
+        Stock stockEntity = mapper.toEntity(stock,existingProduct);
 
         stockRepository.save(stockEntity);
 
@@ -68,37 +61,30 @@ public class StockService {
     }
 
     public ResponseEntity<BaseResponseModel> adjustQuantity(Long stockId, UpdateStockModel updateStock) {
-        Optional<Stock> existingStock = stockRepository.findById(stockId);
-
-        // stock not found in DB
-        if(existingStock.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new BaseResponseModel("fail","stock not found with id: " + stockId));
-        }
-
-        Stock stock = existingStock.get();
+        Stock existingStock = stockRepository.findById(stockId)
+                .orElseThrow(() -> new ResourceNotFoundException("stock not found with id: " + stockId));
 
         if(updateStock.getOperationType() == 1) { // add
-            int newQty = stock.getQuantity() + updateStock.getQuantity();
+            int newQty = existingStock.getQuantity() + updateStock.getQuantity();
 
-            stock.setQuantity(newQty);
+            existingStock.setQuantity(newQty);
         } else if(updateStock.getOperationType() == 2) { // remove
             // when remove amount > existing amount
-            if(stock.getQuantity() < updateStock.getQuantity()) {
+            if(existingStock.getQuantity() < updateStock.getQuantity()) {
                 return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-                        .body(new BaseResponseModel("fail","quantity to remove can not be exceeded than existing stock: " + stock.getQuantity()));
+                        .body(new BaseResponseModel("fail","quantity to remove can not be exceeded than existing stock: " + existingStock.getQuantity()));
             }
 
-            int newQty = stock.getQuantity() - updateStock.getQuantity();
+            int newQty = existingStock.getQuantity() - updateStock.getQuantity();
 
-            stock.setQuantity(newQty);
+            existingStock.setQuantity(newQty);
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new BaseResponseModel("fail","invalid operation type"));
         }
 
 
-        stockRepository.save(stock);
+        stockRepository.save(existingStock);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new BaseResponseModel("success","successfully adjusted stock quantity"));
@@ -106,8 +92,7 @@ public class StockService {
 
     public ResponseEntity<BaseResponseModel> deleteStock(Long stockId) {
         if(!stockRepository.existsById(stockId)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new BaseResponseModel("fail","stock not found with id: " + stockId));
+           throw new ResourceNotFoundException("stock is not found." + stockId);
         }
 
         stockRepository.deleteById(stockId);

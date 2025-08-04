@@ -1,6 +1,8 @@
 package com.chiikawa.demo.service;
 
 import com.chiikawa.demo.DTO.User.UserResponseDto;
+import com.chiikawa.demo.Exception.model.DuplicateResourceException;
+import com.chiikawa.demo.Exception.model.ResourceNotFoundException;
 import com.chiikawa.demo.Mapper.UserMapper;
 import com.chiikawa.demo.entity.User;
 import com.chiikawa.demo.model.BaseResponseModel;
@@ -33,14 +35,10 @@ public class UserService {
     }
 
     public ResponseEntity<BaseResponseWithDataModel> getUser(Long userId) {
-        Optional<User> user = userRepository.findById(userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("user not found with id : " + userId));
 
-        if(user.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new BaseResponseWithDataModel("fail","user not found with id : " + userId,null));
-        }
-
-        UserResponseDto dto = mapper.toDto(user.get());
+        UserResponseDto dto = mapper.toDto(user);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new BaseResponseWithDataModel("success","user found",dto));
@@ -49,14 +47,12 @@ public class UserService {
     public ResponseEntity<BaseResponseModel> createUser(UserDto payload) {
         // validate if username is existed
         if (userRepository.existsByName(payload.getName())){
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(new BaseResponseModel("fail.","Username is already existed."));
+            throw new DuplicateResourceException("Username is already existed.");
         }
 
         // validate if email is existed
         if (userRepository.existsByEmail(payload.getEmail())){
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(new BaseResponseModel("fail.","Email is already existed."));
+            throw new DuplicateResourceException("Email is already existed.");
         }
 
         User user = mapper.toEntity(payload);
@@ -69,19 +65,13 @@ public class UserService {
     }
 
     public ResponseEntity<BaseResponseModel> updateUser(UserDto payload, Long userId) {
-        Optional<User> existing = userRepository.findById(userId);
-
-        // if user not found, then response 404
-        if(existing.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new BaseResponseModel("fail","user not found with id: " + userId));
-        }
+        User existing = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("user not found with id: " + userId));
 
         // modify values
-        User updatedUser = existing.get();
-        mapper.updateEntityFromDto(updatedUser,payload);
+        mapper.updateEntityFromDto(existing,payload);
 
-        userRepository.save(updatedUser);
+        userRepository.save(existing);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new BaseResponseModel("success","successfully updated user"));
@@ -90,8 +80,7 @@ public class UserService {
     public ResponseEntity<BaseResponseModel> deleteUser(Long userId) {
         // if user not found, then response 404
         if(!userRepository.existsById(userId)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new BaseResponseModel("fail","user not found with id: " + userId));
+            throw new ResourceNotFoundException("user not found with id: " + userId);
         }
 
         // user found , then delete
