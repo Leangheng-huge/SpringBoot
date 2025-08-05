@@ -1,12 +1,11 @@
 package com.chiikawa.demo.Controller;
 
-import com.chiikawa.demo.DTO.Product.ProductDto;
 import com.chiikawa.demo.DTO.supplier.SupplierDto;
 import com.chiikawa.demo.DTO.supplier.UpdateSupplierDto;
 import com.chiikawa.demo.model.BaseResponseModel;
 import com.chiikawa.demo.model.BaseResponseWithDataModel;
-import com.chiikawa.demo.service.ProductService;
 import com.chiikawa.demo.service.SupplierService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,14 +22,14 @@ public class SupplierController {
     }
 
     @PostMapping
-    public ResponseEntity<BaseResponseModel> createSupplier(@RequestBody SupplierDto payload) {
+    public ResponseEntity<BaseResponseModel> createSupplier(@Valid @RequestBody SupplierDto payload) {
         return supplierService.createSupplier(payload);
     }
 
     @PutMapping("{supplier_id}")
     public ResponseEntity<BaseResponseModel> updateSupplier(
             @PathVariable("supplier_id") Long supplierId,
-            @RequestBody UpdateSupplierDto payload
+            @Valid @RequestBody UpdateSupplierDto payload
     ) {
         return supplierService.updateSuppliers(supplierId,payload);
     }
