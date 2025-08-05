@@ -17,6 +17,7 @@ public class StockDto {
     @Positive(message = "stock cannot be negative ")
     private Long productId;
 
+    @NotNull(message = "quantity is provided")
     @Min(value = 0, message = "quantity must not be zero or more" )
     private Integer quantity;
 }
