@@ -4,6 +4,7 @@ import com.chiikawa.demo.model.BaseResponseModel;
 import com.chiikawa.demo.model.BaseResponseWithDataModel;
 import com.chiikawa.demo.DTO.Product.ProductDto;
 import com.chiikawa.demo.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,25 +22,27 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BaseResponseWithDataModel> getProduct(@PathVariable("id") Long id) {
-        return productService.getProduct(id);
+    public ResponseEntity<BaseResponseWithDataModel> getProduct(@PathVariable("id") Long productId) {
+        return productService.getProduct(productId);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<BaseResponseWithDataModel> searchProductByFilters(@RequestParam(value = "name")
-                                                                                 String name, Double minPrice, Double maxPrice) {
-
-        return productService.searchProduct(name, minPrice , maxPrice);
+    public ResponseEntity<BaseResponseWithDataModel> searchProductsByFilters(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "minPrice", required = false) Double minPrice,
+            @RequestParam(value = "maxPrice", required = false) Double maxPrice
+    ) {
+        return productService.searchProduct(name,minPrice,maxPrice);
     }
 
     @PostMapping
-    public ResponseEntity<BaseResponseModel> createProduct(@RequestBody ProductDto payload) {
+    public ResponseEntity<BaseResponseModel> createProduct(@Valid @RequestBody ProductDto payload) {
         return productService.createProduct(payload);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<BaseResponseModel> updateProduct(@PathVariable("id") Long id,
-                                                                    @RequestBody ProductDto payload) {
+                                                                    @Valid @RequestBody ProductDto payload) {
         return productService.updateProduct(id, payload);
     }
 
