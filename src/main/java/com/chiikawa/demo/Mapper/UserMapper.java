@@ -34,8 +34,7 @@ public class UserMapper {
         }
 
         entity.setName(dto.getName());
-        entity.setEmail(dto.getEmail());
-        entity.setPassword(dto.getPassword());
+        entity.setAge(dto.getAge());
         entity.setRole(dto.getRole());
         entity.setAddress(dto.getAddress());
     }

@@ -1,5 +1,6 @@
 package com.chiikawa.demo.Controller;
 
+import com.chiikawa.demo.DTO.User.UpdateUserDto;
 import com.chiikawa.demo.model.BaseResponseModel;
 import com.chiikawa.demo.DTO.User.UserDto;
 import com.chiikawa.demo.model.BaseResponseWithDataModel;
@@ -40,7 +41,7 @@ public class UserController {
     //  endpoint -> /api/v1/users/923482348284
     @PutMapping("/{user_id}")
     public ResponseEntity<BaseResponseModel> updateUser(@PathVariable("user_id") Long userId,
-                                                        @Valid @RequestBody UserDto payload) {
+                                                        @Valid @RequestBody UpdateUserDto payload) {
         return userService.updateUser(payload,userId);
     }
 
