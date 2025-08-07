@@ -1,5 +1,6 @@
 package com.chiikawa.demo.Mapper;
 
+import com.chiikawa.demo.DTO.User.UpdateUserDto;
 import com.chiikawa.demo.DTO.User.UserDto;
 import com.chiikawa.demo.DTO.User.UserResponseDto;
 import com.chiikawa.demo.entity.User;
@@ -27,7 +28,7 @@ public class UserMapper {
         return entity;
     }
 
-    public void updateEntityFromDto(User entity, UserDto dto) {
+    public void updateEntityFromDto(User entity, UpdateUserDto dto) {
         if(entity == null || dto == null) {
             return;
         }

@@ -1,5 +1,6 @@
 package com.chiikawa.demo.service;
 
+import com.chiikawa.demo.DTO.User.UpdateUserDto;
 import com.chiikawa.demo.DTO.User.UserResponseDto;
 import com.chiikawa.demo.Exception.model.DuplicateResourceException;
 import com.chiikawa.demo.Exception.model.ResourceNotFoundException;
@@ -64,7 +65,7 @@ public class UserService {
                 .body(new BaseResponseModel("success","successfully created user"));
     }
 
-    public ResponseEntity<BaseResponseModel> updateUser(UserDto payload, Long userId) {
+    public ResponseEntity<BaseResponseModel> updateUser(UpdateUserDto payload, Long userId) {
         User existing = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("user not found with id: " + userId));
 
