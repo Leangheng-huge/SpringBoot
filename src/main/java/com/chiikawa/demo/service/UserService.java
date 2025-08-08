@@ -1,5 +1,6 @@
 package com.chiikawa.demo.service;
 
+import com.chiikawa.demo.DTO.User.ChangePasswordUserDto;
 import com.chiikawa.demo.DTO.User.UpdateUserDto;
 import com.chiikawa.demo.DTO.User.UserResponseDto;
 import com.chiikawa.demo.Exception.model.DuplicateResourceException;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -92,4 +94,26 @@ public class UserService {
                 .body(new BaseResponseModel("success","successfully deleted user"));
     }
 
+    public ResponseEntity<BaseResponseModel> changePassword(ChangePasswordUserDto payload, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("user not found with id: " + userId));
+
+        // old password is incorrect
+        if(!Objects.equals(user.getPassword(), payload.getOldPassword())) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+                    .body(new BaseResponseModel("fail","old password is incorrect, please enter the correct password"));
+        }
+
+        // new password and confirm password not match
+        if(!Objects.equals(payload.getNewPassword(), payload.getConfirmPassword())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new BaseResponseModel("fail","new password and confirm password must be the same"));
+        }
+
+        mapper.updateEntityChangePassword(user, payload.getNewPassword());
+        userRepository.save(user);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new BaseResponseModel("success","successfully changed password"));
+    }
 }

@@ -1,7 +1,7 @@
 package com.chiikawa.demo.DTO.User;
 
-import com.chiikawa.demo.common.annotations.Role;
-import com.chiikawa.demo.common.enums.ValidEnum;
+import com.chiikawa.demo.common.enums.Role;
+import com.chiikawa.demo.common.annotations.ValidEnum;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

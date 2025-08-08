@@ -1,5 +1,6 @@
 package com.chiikawa.demo.Controller;
 
+import com.chiikawa.demo.DTO.User.ChangePasswordUserDto;
 import com.chiikawa.demo.DTO.User.UpdateUserDto;
 import com.chiikawa.demo.model.BaseResponseModel;
 import com.chiikawa.demo.DTO.User.UserDto;
@@ -49,5 +50,11 @@ public class UserController {
     @DeleteMapping("/{user_id}")
     public ResponseEntity<BaseResponseModel> deleteUser(@PathVariable("user_id") Long userId) {
         return userService.deleteUser(userId);
+    }
+
+    @PatchMapping("/{user_id}/change-password")
+    public ResponseEntity<BaseResponseModel> changePassword(@PathVariable("user_id") Long userId, 
+                                                        @Valid @RequestBody ChangePasswordUserDto payload) {
+        return userService.changePassword(payload, userId);
     }
 }
