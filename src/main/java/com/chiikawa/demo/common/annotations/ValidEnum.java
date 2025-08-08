@@ -1,4 +1,4 @@
-package com.chiikawa.demo.common.enums;
+package com.chiikawa.demo.common.annotations;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
