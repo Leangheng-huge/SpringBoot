@@ -1,5 +1,6 @@
 package com.chiikawa.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -22,7 +23,8 @@ public class Stock {
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-   @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id")
+    @JsonIgnore
     private Product product ;
 
     @ManyToOne(fetch = FetchType.LAZY)
