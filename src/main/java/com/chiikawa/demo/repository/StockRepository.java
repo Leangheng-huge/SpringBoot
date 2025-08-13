@@ -4,7 +4,7 @@ import com.chiikawa.demo.entity.Stock;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import org.w3c.dom.stylesheets.LinkStyle;
+
 
 import java.util.List;
 
