@@ -1,15 +1,18 @@
 package com.chiikawa.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-
+import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name= "products")
-@Data
-
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString(exclude = {"stocks"})
+@EqualsAndHashCode(exclude = {"stocks"})
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,17 +31,16 @@ public class Product {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Stock> stocks;
 
     @Transient
-    public Long getTotalStock(){
-        if (stocks == null) return 0L;
+    public Long getTotalStock() {
+        if(stocks == null) return 0L;
 
-            return stocks.stream()
-                    .mapToLong(stocks-> stocks.getQuantity())
-                    .sum();
-
+        return stocks.stream()
+                .mapToLong(stock -> stock.getQuantity())
+                .sum();
     }
 
     @PrePersist
