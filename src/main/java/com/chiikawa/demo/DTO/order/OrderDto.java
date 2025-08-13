@@ -1,4 +1,4 @@
-package com.chiikawa.demo.DTO;
+package com.chiikawa.demo.DTO.order;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotEmpty;

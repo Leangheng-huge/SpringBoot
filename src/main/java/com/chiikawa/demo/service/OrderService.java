@@ -1,12 +1,13 @@
 package com.chiikawa.demo.service;
 
-import com.chiikawa.demo.DTO.OrderDto;
-import com.chiikawa.demo.DTO.OrderItemDto;
+import com.chiikawa.demo.DTO.order.OrderDto;
+import com.chiikawa.demo.DTO.order.OrderItemDto;
 import com.chiikawa.demo.Mapper.OrderMapper;
 import com.chiikawa.demo.entity.Order;
 import com.chiikawa.demo.entity.Stock;
 import com.chiikawa.demo.model.BaseResponseModel;
 
+import com.chiikawa.demo.model.BaseResponseWithDataModel;
 import com.chiikawa.demo.repository.OrderRepository;
 import com.chiikawa.demo.repository.StockRepository;
 import jakarta.transaction.Transactional;
@@ -30,6 +31,13 @@ public class OrderService {
 
     @Autowired
     private StockRepository stockRepository;
+
+    public ResponseEntity<BaseResponseWithDataModel> listOrders() {
+        List<Order> orders = orderRepository.findAll();
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new BaseResponseWithDataModel("success","successfully retrieved orders",mapper.toResponseDtoList(orders)));
+    }
 
     @Transactional
     public ResponseEntity<BaseResponseModel> createOrder(OrderDto payload) {
