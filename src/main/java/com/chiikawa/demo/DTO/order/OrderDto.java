@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 public class OrderDto {
     @JsonProperty("items")
-    @NotNull(message = "order itemm is require")
+    @NotNull(message = "order item is require")
     @NotEmpty(message = "order item cannot be empty")
     private List<OrderItemDto> orderItems;
 }

@@ -2,6 +2,7 @@ package com.chiikawa.demo.Exception;
 
 import com.chiikawa.demo.Exception.model.DuplicateResourceException;
 import com.chiikawa.demo.Exception.model.ResourceNotFoundException;
+import com.chiikawa.demo.Exception.model.UnprocessableEntityException;
 import com.chiikawa.demo.model.BaseResponseModel;
 import com.chiikawa.demo.model.BaseResponseWithDataModel;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DuplicateResourceException.class)
     public ResponseEntity<BaseResponseModel> handleDuplicateException(DuplicateResourceException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new BaseResponseModel("fail.", ex.getMessage()));
+    }
+
+    @ExceptionHandler(UnprocessableEntityException.class)
+    public ResponseEntity<BaseResponseModel> handleUnprocessableEntityException(UnprocessableEntityException ex) {
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
                 .body(new BaseResponseModel("fail.", ex.getMessage()));
     }
 

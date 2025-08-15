@@ -3,6 +3,7 @@ package com.chiikawa.demo.Mapper;
 import com.chiikawa.demo.DTO.order.OrderDto;
 import com.chiikawa.demo.DTO.order.OrderItemResponseDto;
 import com.chiikawa.demo.DTO.order.OrderResponseDto;
+import com.chiikawa.demo.DTO.order.OrderUpdateDto;
 import com.chiikawa.demo.entity.Order;
 import com.chiikawa.demo.entity.OrderItem;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +68,21 @@ public class OrderMapper {
         return entities.stream()
                 .map(order -> this.toResponseDto(order))
                 .toList();
+    }
+
+    public void updateEntityFromDto(Order entity, OrderUpdateDto dto) {
+        if(entity == null || dto == null)
+            return;
+
+        entity.setStatus(dto.getStatus());
+    }
+
+    public Double calculateTotalPrice(List<OrderItemResponseDto> items) {
+        return items.stream()
+                .mapToDouble(orderItemResponseDto -> {
+                    return orderItemResponseDto.getPurchaseAmount() * orderItemResponseDto.getUnitPrice();
+                })
+                .sum();
     }
 
 }
