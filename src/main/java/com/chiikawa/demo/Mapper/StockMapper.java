@@ -34,12 +34,12 @@ public class StockMapper {
         return dto;
     }
 
-    public List<StockResponseDto> toDoList(List<Stock> entites){
-        if ((entites == null || entites.isEmpty())){
+    public List<StockResponseDto> toDtoList(List<Stock> entities) {
+        if(entities == null || entities.isEmpty()) {
             return new ArrayList<>();
         }
 
-        return entites.stream()
+        return entities.stream()
                 .map(stock -> this.toDto(stock))
                 .collect(Collectors.toList());
     }
