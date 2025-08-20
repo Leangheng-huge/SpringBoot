@@ -1,5 +1,6 @@
 package com.chiikawa.demo.service;
 
+import com.chiikawa.demo.DTO.Product.ProductResponseDto;
 import com.chiikawa.demo.Mapper.ProductMapper;
 import com.chiikawa.demo.entity.Product;
 import com.chiikawa.demo.model.BaseResponseModel;
@@ -25,22 +26,20 @@ public class ProductService {
     @Autowired
     private ProductMapper mapper;
 
-    public ResponseEntity<BaseResponseWithDataModel> listProduct() {
+    public List<ProductResponseDto> listProducts() {
         List<Product> products = productRepository.findAll();
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new BaseResponseWithDataModel("success", "Products retrieved", mapper.toDtoList(products)));
+        return mapper.toDtoList(products);
     }
 
-    public ResponseEntity<BaseResponseWithDataModel> getProduct(@PathVariable("id") Long productId) {
+    public ProductResponseDto getProduct(Long productId) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() ->new ResourceNotFoundException("Product not found with id: " + productId));
+                .orElseThrow(() -> new ResourceNotFoundException("product not found with id : " + productId));
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new BaseResponseWithDataModel("success", "Product retrieved", product));
+        return mapper.toDto(product);
     }
 
-    public ResponseEntity<BaseResponseModel> createProduct(ProductDto product) {
+    public void createProduct(ProductDto product) {
         // validate if product is already existed
         if(productRepository.existsByProductName(product.getName())) {
             throw new DuplicateResourceException("product is already existed");
@@ -49,44 +48,34 @@ public class ProductService {
         Product productEntity = mapper.toEntity(product);
 
         productRepository.save(productEntity);
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new BaseResponseModel("success","successfully created product"));
     }
 
-    public ResponseEntity<BaseResponseModel> updateProduct(Long productId, ProductDto product) {
-        Product existingProduct = productRepository.findById(productId)
-                .orElseThrow(() ->new ResourceNotFoundException("Product not found with id: " + productId));
-        // user found, then update it
+    public void updateProduct(Long productId,ProductDto product) {
+        Product existing = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("product not found with id : " + productId));
 
-        existingProduct.setPrice(product.getPrice());
-        existingProduct.setProductName(product.getName());
-        existingProduct.setDescription(product.getDescription());
-        existingProduct.setUpdatedAt(LocalDateTime.now());
+        existing.setProductName(product.getName());
+        existing.setDescription(product.getDescription());
+        existing.setPrice(product.getPrice());
 
-        productRepository.save(existingProduct);
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new BaseResponseModel("success", "Product updated"));
+        productRepository.save(existing);
     }
 
-    public ResponseEntity<BaseResponseModel> deleteProduct(Long productId) {
-        if (!productRepository.existsById(productId)) {
-            throw new ResourceNotFoundException("Product not found with id: " + productId);
+    public void deleteProduct(Long productId) {
+        if(!productRepository.existsById(productId)) {
+            throw new ResourceNotFoundException("product not found with id : " + productId);
         }
-        productRepository.deleteById(productId);
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new BaseResponseModel("success", "Product deleted"));
+        productRepository.deleteById(productId);
     }
 
-    public ResponseEntity<BaseResponseWithDataModel> searchProduct(String name, Double minPrice, Double maxPrice) {
+    public List<ProductResponseDto> searchProducts(String name, Double minPrice, Double maxPrice) {
         String formattedName = name != null ?
                 name.toLowerCase()
                 : null;
-        List<Product> product = productRepository.findProductWithFilters(formattedName, minPrice, maxPrice);
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new BaseResponseWithDataModel("success", "Products retrieved", product));
+        List<Product> products = productRepository.findProductsWithFilters(formattedName,minPrice,maxPrice);
+
+        return mapper.toDtoList(products);
     }
 }

@@ -1,53 +1,74 @@
 package com.chiikawa.demo.Controller;
 
+import com.chiikawa.demo.DTO.Product.ProductResponseDto;
+import com.chiikawa.demo.DTO.base.Response;
 import com.chiikawa.demo.model.BaseResponseModel;
 import com.chiikawa.demo.model.BaseResponseWithDataModel;
 import com.chiikawa.demo.DTO.Product.ProductDto;
 import com.chiikawa.demo.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/api/v1/products")
-@RestController
-public class ProductController {
+import java.util.List;
 
+@RestController
+@RequestMapping("/api/v1/products")
+public class ProductController {
     @Autowired
     private ProductService productService;
 
     @GetMapping
-    public ResponseEntity<BaseResponseWithDataModel> listProduct() {
-        return productService.listProduct();
+    public ResponseEntity<Response> listProducts() {
+        List<ProductResponseDto> products = productService.listProducts();
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Response.success("200","success","successfully retrieved products",products));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BaseResponseWithDataModel> getProduct(@PathVariable("id") Long productId) {
-        return productService.getProduct(productId);
+    public ResponseEntity<Response> getProduct(@PathVariable("id") Long productId) {
+        ProductResponseDto product = productService.getProduct(productId);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Response.success("200","success","product found",product));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<BaseResponseWithDataModel> searchProductsByFilters(
+    public ResponseEntity<Response> searchProductsByFilters(
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "minPrice", required = false) Double minPrice,
             @RequestParam(value = "maxPrice", required = false) Double maxPrice
     ) {
-        return productService.searchProduct(name,minPrice,maxPrice);
+        List<ProductResponseDto> products = productService.searchProducts(name,minPrice,maxPrice);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Response.success("200","success","successfully retrieved products with filters",products));
     }
 
     @PostMapping
-    public ResponseEntity<BaseResponseModel> createProduct(@Valid @RequestBody ProductDto payload) {
-        return productService.createProduct(payload);
+    public ResponseEntity<Response> createProduct(@Valid @RequestBody ProductDto payload) {
+        productService.createProduct(payload);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(Response.success("201","success","successfully created product"));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BaseResponseModel> updateProduct(@PathVariable("id") Long id,
-                                                                    @Valid @RequestBody ProductDto payload) {
-        return productService.updateProduct(id, payload);
+    public ResponseEntity<Response> updateProduct(@PathVariable("id") Long productId,@RequestBody ProductDto payload) {
+        productService.updateProduct(productId,payload);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Response.success("200","success","successfully updated product"));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<BaseResponseModel> deleteProduct(@PathVariable("id") Long id) {
-        return productService.deleteProduct(id);
+    public ResponseEntity<Response> deleteProduct(@PathVariable("id") Long productId) {
+        productService.deleteProduct(productId);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Response.success("200","success","successfully deleted product id: " + productId));
     }
 }

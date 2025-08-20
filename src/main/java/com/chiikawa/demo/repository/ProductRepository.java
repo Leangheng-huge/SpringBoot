@@ -9,18 +9,17 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Long> {
-
+public interface ProductRepository extends JpaRepository<Product,Long> {
     @Query("SELECT p FROM Product p WHERE " +
             "(:name IS NULL OR LOWER(p.productName) LIKE %:name%) AND" +
             "(:minPrice IS NULL OR p.price >= :minPrice) AND" +
             "(:maxPrice IS NULL OR p.price <= :maxPrice)"
     )
-
-    List <Product> findProductWithFilters(
+    List<Product> findProductsWithFilters(
             @Param("name") String name,
             @Param("minPrice") Double minPrice,
             @Param("maxPrice") Double maxPrice
     );
+
     Boolean existsByProductName(String productName);
 }
