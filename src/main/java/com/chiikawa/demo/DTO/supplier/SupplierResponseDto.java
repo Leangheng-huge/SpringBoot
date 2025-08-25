@@ -3,7 +3,7 @@ package com.chiikawa.demo.DTO.supplier;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
-import org.springframework.cglib.core.Local;
+
 
 import java.time.LocalDateTime;
 
