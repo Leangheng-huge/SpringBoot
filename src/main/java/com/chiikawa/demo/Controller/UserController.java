@@ -42,16 +42,9 @@ public class UserController {
 
     // used for creating/inserting record
     // request body can be called request payload or shortcut "payload"
-    @PostMapping
-    public ResponseEntity<Response> createUser(@Valid @RequestBody UserDto payload) {
-        userService.createUser(payload);
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(Response.success("201","success","successfully created user"));
-    }
 
-    //  endpoint -> /api/v1/users/923482348284
+    //  endpoint -> /api/v1/users/1551316
     @PutMapping("/{user_id}")
     public ResponseEntity<Response> updateUser(@PathVariable("user_id") Long userId,@Valid @RequestBody UpdateUserDto payload) {
         userService.updateUser(payload,userId);
@@ -71,7 +64,8 @@ public class UserController {
 
     // change password
     @PatchMapping("/{user_id}/change-password")
-    public ResponseEntity<Response> changePassword(@PathVariable("user_id") Long userId,@RequestBody ChangePasswordUserDto payload) {
+    public ResponseEntity<Response> changePassword(@PathVariable("user_id") Long userId,
+                                                   @RequestBody ChangePasswordUserDto payload) {
         userService.changePassword(payload, userId);
 
         return ResponseEntity.status(HttpStatus.OK)
