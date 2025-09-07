@@ -2,21 +2,24 @@ package com.chiikawa.demo.service;
 
 import com.chiikawa.demo.DTO.User.ChangePasswordUserDto;
 import com.chiikawa.demo.DTO.User.UpdateUserDto;
+
+import com.chiikawa.demo.DTO.User.UserDto;
 import com.chiikawa.demo.DTO.User.UserResponseDto;
-import com.chiikawa.demo.Exception.model.DuplicateResourceException;
+
 import com.chiikawa.demo.Exception.model.ResourceNotFoundException;
 import com.chiikawa.demo.Exception.model.UnprocessableEntityException;
 import com.chiikawa.demo.Mapper.UserMapper;
 import com.chiikawa.demo.entity.User;
 
-import com.chiikawa.demo.DTO.User.UserDto;
 
 import com.chiikawa.demo.repository.UserRepository;
 import com.chiikawa.demo.service.security.JwtUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,27 +47,7 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("user not found with id : " + userId));
 
-        String token = jwtUtil.generateToken(user);
-
-        System.out.println("Token: " + token );
-
         return mapper.toDto(user);
-    }
-
-    public void createUser(UserDto payload) {
-        // validate if username is existed
-        if(userRepository.existsByName(payload.getName())) {
-            throw new DuplicateResourceException("username is already existed");
-        }
-
-        // validate if email is existed
-        if(userRepository.existsByEmail(payload.getEmail())) {
-            throw new DuplicateResourceException("email is already existed");
-        }
-
-        User user = mapper.toEntity(payload);
-
-        userRepository.save(user);
     }
 
     public void updateUser(UpdateUserDto payload, Long userId) {
@@ -106,9 +89,10 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws ResourceNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByName(username)
-                .orElseThrow(() ->{throw new ResourceNotFoundException("user not found with username: " + username);}
-                );
+                .orElseThrow(() -> {
+                    throw new UsernameNotFoundException("user not found: " + username);
+                });
     }
 }
