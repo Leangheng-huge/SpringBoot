@@ -15,7 +15,7 @@ import java.util.Map;
 @Component
 public class JwtUtil {
     @Value("${config.security.secret}")
-    private String secret; // ThisIsMySecret
+    private String secret; // CéstMySecrét
 
     @Value("${config.security.expiration}")
     private long expiration; // 3600000ms
@@ -31,7 +31,6 @@ public class JwtUtil {
     }
 
     private String createToken(Map<String,Object> claims, String subject) {
-        System.out.println("Key: " + this.getSigningKey());
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -39,7 +38,6 @@ public class JwtUtil {
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + this.expiration))
                 .signWith(this.getSigningKey(), SignatureAlgorithm.HS256)
-                // for HS256 is for 256 bits(32 bytes)
                 .compact();
     }
 }
