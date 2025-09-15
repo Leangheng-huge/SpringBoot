@@ -3,8 +3,11 @@ package com.chiikawa.demo.Controller;
 import com.chiikawa.demo.DTO.User.UserDto;
 import com.chiikawa.demo.DTO.auth.AuthDto;
 import com.chiikawa.demo.DTO.auth.AuthResponseDto;
+import com.chiikawa.demo.DTO.auth.RefreshTokenDto;
+import com.chiikawa.demo.DTO.auth.RefreshTokenResponseDto;
 import com.chiikawa.demo.DTO.base.Response;
 import com.chiikawa.demo.service.security.AuthService;
+import com.chiikawa.demo.service.security.RefreshTokenService;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,9 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
+    @Autowired
+    private RefreshTokenService refreshTokenService;
+
     @PostMapping("/register")
     public ResponseEntity<Response> register(@Valid @RequestBody UserDto payload) {
         AuthResponseDto dto = authService.register(payload);
@@ -38,5 +44,14 @@ public class AuthController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(Response.success("200","success","successfully logged in",dto));
+    }
+
+    @PostMapping("/refresh_token")
+    public ResponseEntity<Response> refreshToken(@RequestBody RefreshTokenDto payload) {
+        RefreshTokenResponseDto dto = authService.refreshToken(payload);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(Response.success("200","success","successfully refreshed token",dto));
     }
 }

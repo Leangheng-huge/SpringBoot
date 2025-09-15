@@ -3,6 +3,8 @@ package com.chiikawa.demo.service.security;
 import com.chiikawa.demo.DTO.User.UserDto;
 import com.chiikawa.demo.DTO.auth.AuthDto;
 import com.chiikawa.demo.DTO.auth.AuthResponseDto;
+import com.chiikawa.demo.DTO.auth.RefreshTokenDto;
+import com.chiikawa.demo.DTO.auth.RefreshTokenResponseDto;
 import com.chiikawa.demo.Exception.model.DuplicateResourceException;
 import com.chiikawa.demo.Mapper.UserMapper;
 import com.chiikawa.demo.entity.RefreshToken;
@@ -15,6 +17,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+
 
 @Service
 public class AuthService {
@@ -75,5 +79,33 @@ public class AuthService {
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
 
         return new AuthResponseDto(accessToken,refreshToken.getToken());
+    }
+
+    public RefreshTokenResponseDto refreshToken(RefreshTokenDto payload) {
+        String token = payload.getRefreshToken();
+
+        // find by token
+        RefreshToken refreshToken = refreshTokenService.findByToken(token);
+
+        try{
+
+            refreshToken = refreshTokenService.verifyToken(refreshToken);
+
+        }catch(Exception e) {
+
+            return null;
+        }
+
+        // get user from refresh token
+
+        User user = refreshToken.getUser();
+
+        // generate new access token
+        String newAccessToken = jwtUtil.generateToken(user);
+
+        // rotate refresh token
+        RefreshToken newRefreshToken = refreshTokenService.rotateRefreshToken(refreshToken);
+
+        return new RefreshTokenResponseDto(newAccessToken, newRefreshToken.getToken(), "Bearer");
     }
 }
