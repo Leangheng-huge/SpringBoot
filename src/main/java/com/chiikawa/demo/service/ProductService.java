@@ -3,19 +3,13 @@ package com.chiikawa.demo.service;
 import com.chiikawa.demo.DTO.Product.ProductResponseDto;
 import com.chiikawa.demo.Mapper.ProductMapper;
 import com.chiikawa.demo.entity.Product;
-import com.chiikawa.demo.model.BaseResponseModel;
-import com.chiikawa.demo.model.BaseResponseWithDataModel;
 import com.chiikawa.demo.DTO.Product.ProductDto;
-import com.chiikawa.demo.Exception.model.DuplicateResourceException;
-import com.chiikawa.demo.Exception.model.ResourceNotFoundException;
+import com.chiikawa.demo.exception.model.DuplicateResourceException;
+import com.chiikawa.demo.exception.model.ResourceNotFoundException;
 import com.chiikawa.demo.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
