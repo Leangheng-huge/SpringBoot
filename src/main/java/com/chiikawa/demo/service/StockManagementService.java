@@ -1,7 +1,7 @@
 package com.chiikawa.demo.service;
 
 import com.chiikawa.demo.DTO.order.OrderItemDto;
-import com.chiikawa.demo.Exception.model.UnprocessableEntityException;
+import com.chiikawa.demo.exception.model.UnprocessableEntityException;
 import com.chiikawa.demo.entity.Stock;
 import com.chiikawa.demo.repository.StockRepository;
 import jakarta.transaction.Transactional;
