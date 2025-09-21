@@ -4,7 +4,7 @@ import com.chiikawa.demo.DTO.order.OrderDto;
 
 import com.chiikawa.demo.DTO.order.OrderResponseDto;
 import com.chiikawa.demo.DTO.order.OrderUpdateDto;
-import com.chiikawa.demo.Exception.model.ResourceNotFoundException;
+import com.chiikawa.demo.exception.model.ResourceNotFoundException;
 import com.chiikawa.demo.Mapper.OrderMapper;
 import com.chiikawa.demo.entity.Order;
 
