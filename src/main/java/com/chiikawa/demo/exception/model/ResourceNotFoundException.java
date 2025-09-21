@@ -1,4 +1,4 @@
-package com.chiikawa.demo.Exception.model;
+package com.chiikawa.demo.exception.model;
 
 public class ResourceNotFoundException extends RuntimeException{
     public ResourceNotFoundException(String massage){
