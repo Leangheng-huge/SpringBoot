@@ -1,8 +1,9 @@
-package com.chiikawa.demo.Exception;
+package com.chiikawa.demo.exception;
 
-import com.chiikawa.demo.Exception.model.DuplicateResourceException;
-import com.chiikawa.demo.Exception.model.ResourceNotFoundException;
-import com.chiikawa.demo.Exception.model.UnprocessableEntityException;
+import com.chiikawa.demo.exception.model.CustomAuthenticationException;
+import com.chiikawa.demo.exception.model.DuplicateResourceException;
+import com.chiikawa.demo.exception.model.ResourceNotFoundException;
+import com.chiikawa.demo.exception.model.UnprocessableEntityException;
 import com.chiikawa.demo.model.BaseResponseModel;
 import com.chiikawa.demo.model.BaseResponseWithDataModel;
 import org.springframework.http.HttpStatus;
@@ -21,39 +22,46 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<BaseResponseModel> handleResourceNotFoundException(ResourceNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new BaseResponseModel("fail.", ex.getMessage()));
+                .body(new BaseResponseModel("fail",ex.getMessage()));
     }
 
     @ExceptionHandler(DuplicateResourceException.class)
-    public ResponseEntity<BaseResponseModel> handleDuplicateException(DuplicateResourceException ex) {
+    public ResponseEntity<BaseResponseModel> handleDuplicateResourceException(DuplicateResourceException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(new BaseResponseModel("fail.", ex.getMessage()));
+                .body(new BaseResponseModel("fail",ex.getMessage()));
     }
 
     @ExceptionHandler(UnprocessableEntityException.class)
-    public ResponseEntity<BaseResponseModel> handleUnprocessableEntityException(UnprocessableEntityException ex) {
+    public ResponseEntity<BaseResponseModel> handleUnprocessableEntity(UnprocessableEntityException ex) {
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-                .body(new BaseResponseModel("fail.", ex.getMessage()));
+                .body(new BaseResponseModel("fail", ex.getMessage()));
+    }
+
+    @ExceptionHandler(CustomAuthenticationException.class)
+    public ResponseEntity<BaseResponseModel> handleAuthenticationException(CustomAuthenticationException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new BaseResponseModel("fail", ex.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<BaseResponseModel> handleGenericError(Exception ex) {
+    public ResponseEntity<BaseResponseModel> handleGenericException(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new BaseResponseModel("fail.", "something went wrong! " + ex.getMessage()));
+                .body(new BaseResponseModel("fail","unexpected error occured: " + ex.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<BaseResponseWithDataModel> handleValidationException(MethodArgumentNotValidException ex) {
-        Map<String, String> validationErrors = new HashMap<>();
+        Map<String,String> errors = new HashMap();
 
-        ex.getBindingResult().getAllErrors().forEach(error -> {
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String message = error.getDefaultMessage();
 
-            validationErrors.put(fieldName, message);
+            // insert into errors map
+            errors.put(fieldName,message);
         });
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new BaseResponseWithDataModel("fail", "validation error", validationErrors));
+                .body(new BaseResponseWithDataModel("fail","validation failed",errors));
     }
 }
