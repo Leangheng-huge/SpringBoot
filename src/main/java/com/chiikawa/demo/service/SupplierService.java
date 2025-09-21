@@ -3,8 +3,8 @@ package com.chiikawa.demo.service;
 import com.chiikawa.demo.DTO.supplier.SupplierDto;
 import com.chiikawa.demo.DTO.supplier.SupplierResponseDto;
 import com.chiikawa.demo.DTO.supplier.UpdateSupplierDto;
-import com.chiikawa.demo.Exception.model.DuplicateResourceException;
-import com.chiikawa.demo.Exception.model.ResourceNotFoundException;
+import com.chiikawa.demo.exception.model.DuplicateResourceException;
+import com.chiikawa.demo.exception.model.ResourceNotFoundException;
 import com.chiikawa.demo.Mapper.SupplierMapper;
 import com.chiikawa.demo.entity.Supplier;
 
