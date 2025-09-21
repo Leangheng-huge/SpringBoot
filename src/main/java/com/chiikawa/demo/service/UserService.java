@@ -3,18 +3,17 @@ package com.chiikawa.demo.service;
 import com.chiikawa.demo.DTO.User.ChangePasswordUserDto;
 import com.chiikawa.demo.DTO.User.UpdateUserDto;
 
-import com.chiikawa.demo.DTO.User.UserDto;
 import com.chiikawa.demo.DTO.User.UserResponseDto;
 
-import com.chiikawa.demo.Exception.model.ResourceNotFoundException;
-import com.chiikawa.demo.Exception.model.UnprocessableEntityException;
+import com.chiikawa.demo.exception.model.ResourceNotFoundException;
+import com.chiikawa.demo.exception.model.UnprocessableEntityException;
 import com.chiikawa.demo.Mapper.UserMapper;
 import com.chiikawa.demo.entity.User;
 
 
 import com.chiikawa.demo.repository.UserRepository;
-import com.chiikawa.demo.service.security.JwtUtil;
 
+import com.chiikawa.demo.service.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.core.userdetails.UserDetails;
