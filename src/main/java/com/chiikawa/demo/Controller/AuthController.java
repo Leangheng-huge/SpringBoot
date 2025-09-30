@@ -25,9 +25,6 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    @Autowired
-    private RefreshTokenService refreshTokenService;
-
     @PostMapping("/register")
     public ResponseEntity<Response> register(@Valid @RequestBody UserDto payload) {
         AuthResponseDto dto = authService.register(payload);
@@ -46,8 +43,8 @@ public class AuthController {
                 .body(Response.success("200","success","successfully logged in",dto));
     }
 
-    @PostMapping("/refresh_token")
-    public ResponseEntity<Response> refreshToken(@RequestBody RefreshTokenDto payload) {
+    @PostMapping("/refresh")
+    public ResponseEntity<Response> refresh(@Valid @RequestBody RefreshTokenDto payload) {
         RefreshTokenResponseDto dto = authService.refreshToken(payload);
 
         return ResponseEntity
