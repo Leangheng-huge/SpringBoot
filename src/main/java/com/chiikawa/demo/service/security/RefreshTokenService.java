@@ -64,6 +64,11 @@ public class RefreshTokenService {
         return this.createRefreshToken(oldToken.getUser());
     }
 
+
+    public void deleteExpirationAndRevokedToken() {
+        refreshTokenRepository.deleteExpirationAndRevokedToken(LocalDateTime.now());
+    }
+
     private String generateSecureRefreshToken() {
         // -128 to 127
         SecureRandom random = new SecureRandom();
