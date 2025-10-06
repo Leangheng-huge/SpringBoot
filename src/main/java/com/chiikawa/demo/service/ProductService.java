@@ -1,6 +1,7 @@
 package com.chiikawa.demo.service;
 
 import com.chiikawa.demo.DTO.Product.ProductResponseDto;
+import com.chiikawa.demo.DTO.base.PaginationResponse;
 import com.chiikawa.demo.Mapper.ProductMapper;
 import com.chiikawa.demo.entity.Product;
 import com.chiikawa.demo.DTO.Product.ProductDto;
@@ -8,6 +9,8 @@ import com.chiikawa.demo.exception.model.DuplicateResourceException;
 import com.chiikawa.demo.exception.model.ResourceNotFoundException;
 import com.chiikawa.demo.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +22,13 @@ public class ProductService {
 
     @Autowired
     private ProductMapper mapper;
+
+    public PaginationResponse listProductsWithPagination(Pageable pageable) {
+        Page<Product> products = productRepository.findAll(pageable);
+        Page<ProductResponseDto> productResponseDtos = products.map(product -> mapper.toDto(product));
+
+        return PaginationResponse.from(productResponseDtos);
+    }
 
     public List<ProductResponseDto> listProducts() {
         List<Product> products = productRepository.findAll();
