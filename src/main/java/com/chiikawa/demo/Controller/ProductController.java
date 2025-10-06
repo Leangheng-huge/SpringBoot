@@ -1,20 +1,20 @@
 package com.chiikawa.demo.Controller;
 
 import com.chiikawa.demo.DTO.Product.ProductResponseDto;
+import com.chiikawa.demo.DTO.base.PaginatedResponse;
 import com.chiikawa.demo.DTO.base.Response;
-import com.chiikawa.demo.model.BaseResponseModel;
-import com.chiikawa.demo.model.BaseResponseWithDataModel;
+
 import com.chiikawa.demo.DTO.Product.ProductDto;
 import com.chiikawa.demo.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.chiikawa.demo.DTO.base.PaginationResponse;
+
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class ProductController {
 
     @GetMapping("/paginated")
     public ResponseEntity<Response> listProductsPaginated(@PageableDefault(size = 10, page = 0) Pageable pageable) {
-        PaginationResponse<ProductResponseDto> products = productService.listProductsWithPagination(pageable);
+        PaginatedResponse<ProductResponseDto> products = productService.listProductsWithPagination(pageable);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.success("200", "success", "successfully retrieved products", products));

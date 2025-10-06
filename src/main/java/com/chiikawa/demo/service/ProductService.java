@@ -1,7 +1,7 @@
 package com.chiikawa.demo.service;
 
 import com.chiikawa.demo.DTO.Product.ProductResponseDto;
-import com.chiikawa.demo.DTO.base.PaginationResponse;
+import com.chiikawa.demo.DTO.base.PaginatedResponse;
 import com.chiikawa.demo.Mapper.ProductMapper;
 import com.chiikawa.demo.entity.Product;
 import com.chiikawa.demo.DTO.Product.ProductDto;
@@ -23,11 +23,11 @@ public class ProductService {
     @Autowired
     private ProductMapper mapper;
 
-    public PaginationResponse listProductsWithPagination(Pageable pageable) {
-        Page<Product> products = productRepository.findAll(pageable);
-        Page<ProductResponseDto> productResponseDtos = products.map(product -> mapper.toDto(product));
+    public PaginatedResponse listProductsWithPagination(Pageable pageable) {
+        Page<Product> productPages = productRepository.findAll(pageable);
+        Page<ProductResponseDto> productPagesDto = productPages.map(product -> mapper.toDto(product));
 
-        return PaginationResponse.from(productResponseDtos);
+        return PaginatedResponse.from(productPagesDto,"http://localhost:8080/api/v1/products/paginated");
     }
 
     public List<ProductResponseDto> listProducts() {
