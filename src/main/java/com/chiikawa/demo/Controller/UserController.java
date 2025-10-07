@@ -1,8 +1,10 @@
 package com.chiikawa.demo.Controller;
 
+import com.chiikawa.demo.DTO.Product.ProductResponseDto;
 import com.chiikawa.demo.DTO.User.ChangePasswordUserDto;
 import com.chiikawa.demo.DTO.User.UpdateUserDto;
 import com.chiikawa.demo.DTO.User.UserResponseDto;
+import com.chiikawa.demo.DTO.base.PaginatedResponse;
 import com.chiikawa.demo.DTO.base.Response;
 
 import com.chiikawa.demo.DTO.User.UserDto;
@@ -11,6 +13,9 @@ import com.chiikawa.demo.service.UserService;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +27,16 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
+
+    @GetMapping("/paginated")
+    public ResponseEntity<Response> listUsersPaginated(@PageableDefault(size = 10, page = 0,sort = "id",
+            direction = Sort.Direction.DESC) Pageable pageable) {
+
+        PaginatedResponse<ProductResponseDto> users = userService.listUsersWithPagination(pageable);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Response.success("200", "success", "successfully retrieved products", users));
+    }
 
     // used for retrieving records
     @GetMapping

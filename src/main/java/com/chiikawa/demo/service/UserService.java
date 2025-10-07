@@ -5,6 +5,8 @@ import com.chiikawa.demo.DTO.User.UpdateUserDto;
 
 import com.chiikawa.demo.DTO.User.UserResponseDto;
 
+import com.chiikawa.demo.DTO.base.PaginatedResponse;
+import com.chiikawa.demo.common.config.ApplicationConfiguration;
 import com.chiikawa.demo.exception.model.ResourceNotFoundException;
 import com.chiikawa.demo.exception.model.UnprocessableEntityException;
 import com.chiikawa.demo.Mapper.UserMapper;
@@ -16,6 +18,8 @@ import com.chiikawa.demo.repository.UserRepository;
 import com.chiikawa.demo.service.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -35,6 +39,16 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private JwtUtil jwtUtil;
+
+    @Autowired
+    private ApplicationConfiguration appConfig;
+
+    public PaginatedResponse listUsersWithPagination(Pageable pageable) {
+        Page<User> userPages = userRepository.findAll(pageable);
+        Page<UserResponseDto> userPagesDto = userPages.map(user -> mapper.toDto(user));
+
+        return PaginatedResponse.from(userPagesDto,appConfig.getPagination().getUrlByResource("user"));
+    }
 
     public List<UserResponseDto> listUsers() {
         List<User> users = userRepository.findAll();
