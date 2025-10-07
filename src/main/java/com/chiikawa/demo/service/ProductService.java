@@ -3,6 +3,7 @@ package com.chiikawa.demo.service;
 import com.chiikawa.demo.DTO.Product.ProductResponseDto;
 import com.chiikawa.demo.DTO.base.PaginatedResponse;
 import com.chiikawa.demo.Mapper.ProductMapper;
+import com.chiikawa.demo.common.config.ApplicationConfiguration;
 import com.chiikawa.demo.entity.Product;
 import com.chiikawa.demo.DTO.Product.ProductDto;
 import com.chiikawa.demo.exception.model.DuplicateResourceException;
@@ -23,11 +24,14 @@ public class ProductService {
     @Autowired
     private ProductMapper mapper;
 
+    @Autowired
+    private ApplicationConfiguration appConfig;
+
     public PaginatedResponse listProductsWithPagination(Pageable pageable) {
         Page<Product> productPages = productRepository.findAll(pageable);
         Page<ProductResponseDto> productPagesDto = productPages.map(product -> mapper.toDto(product));
 
-        return PaginatedResponse.from(productPagesDto,"http://localhost:8080/api/v1/products/paginated");
+        return PaginatedResponse.from(productPagesDto,appConfig.getPagination().getUrlByResource("product"));
     }
 
     public List<ProductResponseDto> listProducts() {
