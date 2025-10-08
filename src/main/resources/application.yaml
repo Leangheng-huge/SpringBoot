@@ -10,6 +10,14 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: MyVerySecurePassword
+  #configuartion cache type
+  cache:
+    tye: redis
 
 config:  # Changed from 'application-config' to 'config'
   security:
