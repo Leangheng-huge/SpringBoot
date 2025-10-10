@@ -10,6 +10,7 @@ import com.chiikawa.demo.exception.model.DuplicateResourceException;
 import com.chiikawa.demo.exception.model.ResourceNotFoundException;
 import com.chiikawa.demo.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ public class ProductService {
         return PaginatedResponse.from(productPagesDto,appConfig.getPagination().getUrlByResource("product"));
     }
 
+    @Cacheable(value = "products", key= "'all'")
     public List<ProductResponseDto> listProducts() {
         List<Product> products = productRepository.findAll();
 
