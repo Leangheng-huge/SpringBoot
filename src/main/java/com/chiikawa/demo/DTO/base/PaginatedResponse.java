@@ -2,8 +2,7 @@ package com.chiikawa.demo.DTO.base;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -13,6 +12,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class PaginatedResponse<T> {
     private List<T> content;
     private PaginationMetadata pagination;
