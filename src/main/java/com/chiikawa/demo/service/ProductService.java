@@ -10,6 +10,8 @@ import com.chiikawa.demo.exception.model.DuplicateResourceException;
 import com.chiikawa.demo.exception.model.ResourceNotFoundException;
 import com.chiikawa.demo.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +30,7 @@ public class ProductService {
     @Autowired
     private ApplicationConfiguration appConfig;
 
+    @Cacheable(value = "products-paginated", key = "T(String).valueOf(#pageable.getPageNumber()).concat('-').concat(T(String).valueOf(#pageable.getPageSize()))")
     public PaginatedResponse listProductsWithPagination(Pageable pageable) {
         Page<Product> productPages = productRepository.findAll(pageable);
         Page<ProductResponseDto> productPagesDto = productPages.map(product -> mapper.toDto(product));
@@ -35,13 +38,14 @@ public class ProductService {
         return PaginatedResponse.from(productPagesDto,appConfig.getPagination().getUrlByResource("product"));
     }
 
-    @Cacheable(value = "products", key= "'all'")
+    @Cacheable(value = "products", key = "'all'")
     public List<ProductResponseDto> listProducts() {
         List<Product> products = productRepository.findAll();
 
         return mapper.toDtoList(products);
     }
 
+    @Cacheable(value = "products", key = "#productId")
     public ProductResponseDto getProduct(Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("product not found with id : " + productId));
@@ -49,6 +53,7 @@ public class ProductService {
         return mapper.toDto(product);
     }
 
+    @CachePut(value = "products", key = "#product.getName()")
     public void createProduct(ProductDto product) {
         // validate if product is already existed
         if(productRepository.existsByProductName(product.getName())) {
@@ -60,6 +65,7 @@ public class ProductService {
         productRepository.save(productEntity);
     }
 
+    @CacheEvict(value = "products", key = "#productId")
     public void updateProduct(Long productId,ProductDto product) {
         Product existing = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("product not found with id : " + productId));
