@@ -3,13 +3,13 @@ package com.chiikawa.demo.DTO.base;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 
 @JsonPropertyOrder(value = {"page","size","total_elements","total_pages","first","last","has_next","has_previous","links"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class PaginationMetadata {
     private int page;
     private int size;
