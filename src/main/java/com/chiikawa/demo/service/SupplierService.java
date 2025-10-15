@@ -1,5 +1,6 @@
 package com.chiikawa.demo.service;
 
+import com.chiikawa.demo.DTO.base.PaginatedResponse;
 import com.chiikawa.demo.DTO.supplier.SupplierDto;
 import com.chiikawa.demo.DTO.supplier.SupplierResponseDto;
 import com.chiikawa.demo.DTO.supplier.UpdateSupplierDto;
@@ -11,6 +12,8 @@ import com.chiikawa.demo.entity.Supplier;
 import com.chiikawa.demo.repository.SupplierRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +25,13 @@ public class SupplierService {
 
     @Autowired
     private SupplierMapper mapper;
+
+    public PaginatedResponse listSuppliersWithPagination(Pageable pageable) {
+        Page<Supplier> supplierPages = supplierRepository.findAll(pageable);
+        Page<SupplierResponseDto> supplierPagesDto = supplierPages.map(supplier -> mapper.toDto(supplier));
+
+        return PaginatedResponse.from(supplierPagesDto);
+    }
 
     public List<SupplierResponseDto> listSuppliers() {
         List<Supplier> suppliers = supplierRepository.findAll();

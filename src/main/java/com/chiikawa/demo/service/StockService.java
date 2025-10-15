@@ -3,6 +3,8 @@ package com.chiikawa.demo.service;
 import com.chiikawa.demo.DTO.Stock.StockDto;
 import com.chiikawa.demo.DTO.Stock.StockResponseDto;
 import com.chiikawa.demo.DTO.Stock.UpdateStockDto;
+import com.chiikawa.demo.DTO.base.PaginatedResponse;
+import com.chiikawa.demo.common.config.ApplicationConfiguration;
 import com.chiikawa.demo.exception.model.ResourceNotFoundException;
 import com.chiikawa.demo.exception.model.UnprocessableEntityException;
 import com.chiikawa.demo.Mapper.StockMapper;
@@ -11,6 +13,8 @@ import com.chiikawa.demo.entity.Stock;
 import com.chiikawa.demo.repository.ProductRepository;
 import com.chiikawa.demo.repository.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +30,17 @@ public class StockService {
 
     @Autowired
     private StockMapper mapper;
+
+    @Autowired
+    private ApplicationConfiguration appConfig;
+
+    public PaginatedResponse listStockWithPagination( Pageable pageable) {
+
+        Page<Stock> stockPages = stockRepository.findAll(pageable);
+        Page<StockResponseDto> stockPagesDto = stockPages.map(stock -> mapper.toDto(stock));
+
+        return PaginatedResponse.from(stockPagesDto,appConfig.getPagination().getUrlByResource("stock"));
+    }
 
     public List<StockResponseDto> listStocks() {
         List<Stock> stocks = stockRepository.findAll();

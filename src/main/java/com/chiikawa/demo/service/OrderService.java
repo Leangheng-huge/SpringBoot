@@ -1,9 +1,11 @@
 package com.chiikawa.demo.service;
 
+import com.chiikawa.demo.DTO.base.PaginatedResponse;
 import com.chiikawa.demo.DTO.order.OrderDto;
 
 import com.chiikawa.demo.DTO.order.OrderResponseDto;
 import com.chiikawa.demo.DTO.order.OrderUpdateDto;
+import com.chiikawa.demo.common.config.ApplicationConfiguration;
 import com.chiikawa.demo.exception.model.ResourceNotFoundException;
 import com.chiikawa.demo.Mapper.OrderMapper;
 import com.chiikawa.demo.entity.Order;
@@ -13,6 +15,8 @@ import com.chiikawa.demo.repository.StockRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,6 +35,16 @@ public class OrderService {
 
     @Autowired
     private StockManagementService stockManagementService;
+
+    @Autowired
+    private ApplicationConfiguration appConfig;
+
+    public PaginatedResponse listOrdersWithPagination(Pageable pageable) {
+        Page<Order> orderPages = orderRepository.findAll(pageable);
+        Page<OrderResponseDto> orderPagesDto = orderPages.map(order -> mapper.toResponseDto(order));
+
+        return PaginatedResponse.from(orderPagesDto,appConfig.getPagination().getUrlByResource("order"));
+    }
 
     public List<OrderResponseDto> listOrders() {
         List<Order> orders = orderRepository.findAll();
