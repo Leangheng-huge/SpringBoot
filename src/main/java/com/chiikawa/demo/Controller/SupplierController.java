@@ -1,5 +1,6 @@
 package com.chiikawa.demo.Controller;
 
+import com.chiikawa.demo.DTO.base.PaginatedResponse;
 import com.chiikawa.demo.DTO.base.Response;
 import com.chiikawa.demo.DTO.supplier.SupplierDto;
 import com.chiikawa.demo.DTO.supplier.SupplierResponseDto;
@@ -8,6 +9,9 @@ import com.chiikawa.demo.DTO.supplier.UpdateSupplierDto;
 import com.chiikawa.demo.service.SupplierService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +23,22 @@ import java.util.List;
 public class SupplierController {
     @Autowired
     private SupplierService supplierService;
+
+    @GetMapping("/paginated")
+    public ResponseEntity<Response> listSuppliersPaginated(@PageableDefault(size = 10, page = 0,sort = "id",
+    direction = Sort.Direction.DESC) Pageable pageable){
+
+        PaginatedResponse<SupplierResponseDto> suppliers = supplierService.listSuppliersWithPagination(pageable);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Response.success(
+                                "200",
+                                "success",
+                                "successfully retrieved suppliers",
+                                suppliers
+                        )
+                );
+    }
 
     @GetMapping
     public ResponseEntity<Response> listSuppliers() {

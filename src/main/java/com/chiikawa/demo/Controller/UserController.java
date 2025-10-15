@@ -7,7 +7,7 @@ import com.chiikawa.demo.DTO.User.UserResponseDto;
 import com.chiikawa.demo.DTO.base.PaginatedResponse;
 import com.chiikawa.demo.DTO.base.Response;
 
-import com.chiikawa.demo.DTO.User.UserDto;
+
 
 import com.chiikawa.demo.service.UserService;
 import jakarta.validation.Valid;

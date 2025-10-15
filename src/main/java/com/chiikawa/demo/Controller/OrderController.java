@@ -1,5 +1,6 @@
 package com.chiikawa.demo.Controller;
 
+import com.chiikawa.demo.DTO.base.PaginatedResponse;
 import com.chiikawa.demo.DTO.base.Response;
 import com.chiikawa.demo.DTO.order.OrderDto;
 import com.chiikawa.demo.DTO.order.OrderResponseDto;
@@ -8,6 +9,9 @@ import com.chiikawa.demo.DTO.order.OrderUpdateDto;
 import com.chiikawa.demo.service.OrderService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +23,20 @@ import java.util.List;
 public class OrderController {
     @Autowired
     private OrderService orderService;
+
+    @GetMapping("/paginated")
+    public ResponseEntity<Response> listOrdersPaginated(@PageableDefault(size = 10, page = 0,sort = "id",
+    direction = Sort.Direction.DESC) Pageable pageable){
+        PaginatedResponse<OrderResponseDto> orders = orderService.listOrdersWithPagination(pageable);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Response.success(
+                                "200",
+                                "success",
+                                "successfully retrieved orders",
+                                orders));
+    }
+
 
     @GetMapping
     public ResponseEntity<Response> listOrders() {
