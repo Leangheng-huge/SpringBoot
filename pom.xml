@@ -32,6 +32,11 @@
 		<maven.compiler.target>21</maven.compiler.target>
 	</properties>
 	<dependencies>
+
+        <!-- WebClient dependency -->
+        <dependency> <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
         <!-- Redis cache dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
