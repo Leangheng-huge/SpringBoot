@@ -3,30 +3,55 @@ package com.chiikawa.demo.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
+
+import java.time.Duration;
 
 @Service
 @Slf4j
 public class TestService {
     private WebClient webClient = WebClient
             .builder()
-            .baseUrl("http://localhost:8080")
+            .baseUrl("https://jsonplaceholder.typicode.com")
             .build();
 
-    public Object testSynApi(){
-        String uri = "/photos";
+    public Object testSyncApi() {
+        String uri = "/posts";
 
-        log.info("TEST: Before calling Api");
+        log.info("TEST: Before API request");
 
-        // var = Object
-        var response = webClient.get()
+        Object response = webClient
+                .get()
                 .uri(uri)
                 .retrieve()
-                .bodyToMono(String.class)
+                .bodyToMono(Object.class)
+                .timeout(Duration.ofMillis(10000))
                 .block();
 
-        log.info("TEST: Response");
+        log.info("TEST: Getting response");
 
-        log.info("TEST: After calling Api");
+        log.info("TEST: After API request");
+
+        return response;
+    }
+
+    public Object testAsyncApi() {
+        String uri = "/posts";
+
+        log.info("TEST: Before API request");
+
+        Mono<Object> response = webClient
+                .get()
+                .uri(uri)
+                .retrieve()
+                .bodyToMono(Object.class);
+
+        response.subscribe(res -> {
+            log.info("TEST: Getting response");
+            log.info("API_RESPONSE: {}",res);
+        });
+
+        log.info("TEST: After API request");
 
         return response;
     }

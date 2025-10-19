@@ -15,10 +15,21 @@ public class TestController {
     @Autowired
     private TestService testService;
 
-    @GetMapping
-    public ResponseEntity<Object> test(){
-        Object result = testService.testSynApi();
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(Response.success("200","success","test success",result));
+    @GetMapping("/sync")
+    public ResponseEntity<Object> testSyncApi() {
+        Object res = testService.testSyncApi();
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(Response.success("200","success","success",res));
+    }
+
+    @GetMapping("/async")
+    public ResponseEntity<Object> testAsyncApi() {
+        Object res = testService.testAsyncApi();
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(Response.success("200","success","success",res));
     }
 }
