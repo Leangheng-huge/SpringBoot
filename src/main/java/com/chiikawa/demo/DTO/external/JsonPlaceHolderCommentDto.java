@@ -1,0 +1,12 @@
+package com.chiikawa.demo.DTO.external;
+
+import lombok.Data;
+
+@Data
+public class JsonPlaceHolderCommentDto {
+    private int postId;
+    private int id;
+    private String name;
+    private String email;
+    private String body;
+}
