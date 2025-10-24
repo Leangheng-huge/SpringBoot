@@ -12,6 +12,7 @@ import java.util.HashMap;
 public class ApplicationConfiguration {
     private Security security;
     private Pagination pagination;
+    private JsonPlaceholder jsonPlaceholder;
 
    @Data
     public static class Security {
@@ -31,4 +32,17 @@ public class ApplicationConfiguration {
       }
     }
 
+    @Data
+    public static class JsonPlaceholder{
+       private String baseUrl;
+       private HashMap<String, String> uri;
+
+       public String getPostUrl(){
+           return uri.get("posts");
+        }
+
+        public String getCommentsUri(){
+           return uri.get("comments");
+        }
+    }
 }

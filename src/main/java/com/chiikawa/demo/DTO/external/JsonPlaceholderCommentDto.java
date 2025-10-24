@@ -3,7 +3,7 @@ package com.chiikawa.demo.DTO.external;
 import lombok.Data;
 
 @Data
-public class JsonPlaceHolderPostDto {
+public class JsonPlaceholderCommentDto {
     private int postId;
     private int id;
     private String name;

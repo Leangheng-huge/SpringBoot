@@ -15,20 +15,25 @@ spring:
       host: localhost
       port: 6379
       password: MyVerySecurePassword
-  #configuartion cache type
+  # configuration cache type
   cache:
-    tye: redis
+    type: redis
 
-config:  # Changed from 'application-config' to 'config'
+config:
   security:
     secret: 388c81c79cada4abd82f6cd6a1b76de8eb0c156009f98137e4c41064430eabdd
     expiration: 3600000 # ms
-    refresh-token-expiration: 3 #hr
-    pagination:
-      base-url: http://localhost:8080/api/v1
-      uri:
-        product: /products/paginated
-        stock: /stocks/paginated
-        supplier: /suppliers/paginated
-        user: /users/paginated
-        order: /orders/paginated
+    refresh-token-expiration: 3 # hr
+  pagination:
+    base-url: http://localhost:8080/api/v1
+    uri:
+      product: /products/paginated
+      stock: /stocks/paginated
+      supplier: /suppliers/paginated
+      user: /users/paginated
+      order: /orders/paginated
+  json-placeholder:
+    base-url: https://jsonplaceholder.typicode.com
+    uri:
+      posts: /posts
+      comments: /comments
