@@ -6,43 +6,54 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
 
-@Data
-@ConfigurationProperties(prefix = "config")
 @Configuration
+@ConfigurationProperties(prefix = "config")
+@Data
 public class ApplicationConfiguration {
     private Security security;
     private Pagination pagination;
     private JsonPlaceholder jsonPlaceholder;
+    private Telegram telegram;
 
    @Data
     public static class Security {
-        private String secret ;
-        private long expirationTime ;
-        private long refreshTokenExpiration ;
-
+        private String secret;
+        private long expiration;
+        private long refreshTokenExpiration; // refresh-token-expiration
     }
 
     @Data
     public static class Pagination {
-       private String baseUrl;
-      private HashMap<String, String> uri;
+        private String baseUrl;
+        private HashMap<String,String> uri;
 
-      public String getUrlByResource(String resource) {
-          return baseUrl.concat(uri.getOrDefault(resource,""));
-      }
+        public String getUrlByResource(String resource) {
+            return baseUrl.concat(uri.getOrDefault(resource,""));
+        }
+    }
+
+   @Data
+    public static class JsonPlaceholder {
+        private String baseUrl;
+        private HashMap<String,String> uri;
+
+        public String getPostsUri() {
+            return uri.get("posts");
+        }
+
+        public String getCommentsUri() {
+            return uri.get("comments");
+        }
     }
 
     @Data
-    public static class JsonPlaceholder{
-       private String baseUrl;
-       private HashMap<String, String> uri;
+    public static class Telegram {
+        private String baseUrl;
+        private String token;
+        private String chatId;
 
-       public String getPostUrl(){
-           return uri.get("posts");
-        }
-
-        public String getCommentsUri(){
-           return uri.get("comments");
+        public String getBaseUrl() {
+            return this.baseUrl.replace("{TOKEN}", this.token);
         }
     }
 }
