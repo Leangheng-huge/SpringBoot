@@ -28,7 +28,7 @@ public class JsonPlaceholderService {
     @PostConstruct
     private void init() {
         this.BASE_URL = appConfig.getJsonPlaceholder().getBaseUrl();
-        this.POSTS_URI = appConfig.getJsonPlaceholder().getPostUrl();
+        this.POSTS_URI = appConfig.getJsonPlaceholder().getPostsUri();
         this.COMMENTS_URI = appConfig.getJsonPlaceholder().getCommentsUri();
     }
 

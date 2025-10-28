@@ -27,7 +27,7 @@ public class JwtUtil {
     @PostConstruct
     private void init() {
         this.secret = appConfig.getSecurity().getSecret();
-        this.expiration = appConfig.getSecurity().getExpirationTime();
+        this.expiration = appConfig.getSecurity().getExpiration();
     }
 
     private Key getSigningKey() {
