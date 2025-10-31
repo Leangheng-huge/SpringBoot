@@ -33,6 +33,12 @@
 	</properties>
 	<dependencies>
 
+        <!-- kafka dependency -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+
         <!-- for docker image -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
